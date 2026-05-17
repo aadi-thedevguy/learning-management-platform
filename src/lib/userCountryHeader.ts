@@ -29,7 +29,7 @@ export async function getUserCoupon() {
 	if (coupon == null) return;
 
 	return {
-		stripeCouponId: coupon.stripeCouponId,
+		couponId: coupon.couponId,
 		discountPercentage: coupon.discountPercentage,
 	};
 }

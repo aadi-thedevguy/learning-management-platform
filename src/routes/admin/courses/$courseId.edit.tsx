@@ -1,3 +1,4 @@
+import { NotFoundComponent } from "@/components/NotFoundComponent";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { asc, eq } from "drizzle-orm";
@@ -51,6 +52,7 @@ export const getCourse = createServerFn()
 export const Route = createFileRoute("/admin/courses/$courseId/edit")({
 	loader: ({ params }) => getCourse({ data: params }),
 	component: EditCoursePage,
+	notFoundComponent: () => <NotFoundComponent />,
 });
 
 function EditCoursePage() {

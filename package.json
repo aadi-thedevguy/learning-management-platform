@@ -18,8 +18,7 @@
   },
   "dependencies": {
     "@arcjet/node": "^1.4.0",
-    "@clerk/clerk-react": "^5.61.3",
-    "@clerk/tanstack-react-start": "^1.1.8",
+    "@clerk/tanstack-react-start": "^1.2.5",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
@@ -39,7 +38,6 @@
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/match-sorter-utils": "latest",
     "@tanstack/react-devtools": "latest",
-    "@tanstack/react-form": "latest",
     "@tanstack/react-router": "latest",
     "@tanstack/react-router-devtools": "latest",
     "@tanstack/react-router-ssr-query": "latest",

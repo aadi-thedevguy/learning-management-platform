@@ -1,5 +1,3 @@
-"use client";
-
 import { type ReactNode, useState } from "react";
 import {
 	Dialog,
@@ -33,7 +31,7 @@ export function LessonFormDialog({
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
 			{children}
-			<DialogContent>
+			<DialogContent className="max-h-[80vh] overflow-y-auto">
 				<DialogHeader>
 					<DialogTitle>
 						{lesson == null ? "New Lesson" : `Edit ${lesson.name}`}

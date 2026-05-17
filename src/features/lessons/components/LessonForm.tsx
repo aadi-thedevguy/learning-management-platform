@@ -1,5 +1,4 @@
-"use client";
-
+import { useRouter } from "@tanstack/react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -49,6 +48,7 @@ export function LessonForm({
 		sectionId: string;
 	};
 }) {
+	const router = useRouter();
 	const form = useForm<z.infer<typeof lessonSchema>>({
 		resolver: zodResolver(lessonSchema),
 		defaultValues: {
@@ -66,10 +66,10 @@ export function LessonForm({
 		const data = await action(values);
 		actionToast({ actionData: data });
 		if (!data.error) onSuccess?.();
+		router.invalidate();
 	}
 
 	const videoId = form.watch("youtubeVideoId");
-	console.log(videoId);
 
 	return (
 		<Form {...form}>
@@ -172,11 +172,7 @@ export function LessonForm({
 						<FormItem>
 							<FormLabel>Description</FormLabel>
 							<FormControl>
-								<Textarea
-									className="min-h-20 resize-none"
-									{...field}
-									value={field.value ?? ""}
-								/>
+								<Textarea rows={10} {...field} value={field.value ?? ""} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -184,7 +180,13 @@ export function LessonForm({
 				/>
 				<div className="self-end">
 					<Button disabled={form.formState.isSubmitting} type="submit">
-						Save
+						{form.formState.isSubmitting
+							? lesson
+								? "Updating..."
+								: "Creating..."
+							: lesson
+								? "Update"
+								: "Create"}
 					</Button>
 				</div>
 				{videoId && (

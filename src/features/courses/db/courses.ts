@@ -11,7 +11,7 @@ export async function insertCourse(data: typeof CourseTable.$inferInsert) {
 	return newCourse;
 }
 
-export async function updateCourse(
+export async function updateCourseDb(
 	id: string,
 	data: typeof CourseTable.$inferInsert,
 ) {
@@ -26,7 +26,7 @@ export async function updateCourse(
 	return updatedCourse;
 }
 
-export async function deleteCourse(id: string) {
+export async function deleteCourseDb(id: string) {
 	const [deletedCourse] = await db
 		.delete(CourseTable)
 		.where(eq(CourseTable.id, id))

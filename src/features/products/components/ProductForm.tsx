@@ -1,4 +1,4 @@
-"use client";
+import { useRouter } from "@tanstack/react-router";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -46,6 +46,7 @@ export function ProductForm({
 		name: string;
 	}[];
 }) {
+	const router = useRouter();
 	const form = useForm<z.infer<typeof productSchema>>({
 		resolver: zodResolver(productSchema),
 		defaultValues: product ?? {
@@ -59,10 +60,19 @@ export function ProductForm({
 	});
 
 	async function onSubmit(values: z.infer<typeof productSchema>) {
-		const action =
-			product == null ? createProduct : updateProduct.bind(null, product.id);
-		const data = await action(values);
-		actionToast({ actionData: data });
+		if (product) {
+			const action = updateProduct.bind(null, product.id);
+			const data = await action(values);
+			actionToast({ actionData: data });
+			router.invalidate();
+		} else {
+			const action = createProduct;
+			const data = await action(values);
+			actionToast({ actionData: data });
+			router.navigate({
+				href: `/admin/products/${data.data?.productId}/edit`,
+			});
+		}
 	}
 
 	return (
@@ -199,7 +209,13 @@ export function ProductForm({
 				/>
 				<div className="self-end">
 					<Button disabled={form.formState.isSubmitting} type="submit">
-						Save
+						{form.formState.isSubmitting
+							? product
+								? "Updating..."
+								: "Creating..."
+							: product
+								? "Update"
+								: "Create"}
 					</Button>
 				</div>
 			</form>

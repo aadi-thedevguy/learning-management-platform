@@ -2,7 +2,7 @@ import { env } from "@/env";
 
 export const pppCoupons = [
 	{
-		stripeCouponId: env.PPP_50_COUPON_ID,
+		couponId: env.PPP_50_COUPON_ID,
 		discountPercentage: 0.5,
 		countryCodes: [
 			"AF",
@@ -114,7 +114,7 @@ export const pppCoupons = [
 		],
 	},
 	{
-		stripeCouponId: env.PPP_40_COUPON_ID,
+		couponId: env.PPP_40_COUPON_ID,
 		discountPercentage: 0.4,
 		countryCodes: [
 			"GR",
@@ -148,7 +148,7 @@ export const pppCoupons = [
 		],
 	},
 	{
-		stripeCouponId: env.PPP_30_COUPON_ID,
+		couponId: env.PPP_30_COUPON_ID,
 		discountPercentage: 0.3,
 		countryCodes: [
 			"AE",
@@ -171,7 +171,7 @@ export const pppCoupons = [
 		],
 	},
 	{
-		stripeCouponId: env.PPP_20_COUPON_ID,
+		couponId: env.PPP_20_COUPON_ID,
 		discountPercentage: 0.2,
 		countryCodes: [
 			"AT",

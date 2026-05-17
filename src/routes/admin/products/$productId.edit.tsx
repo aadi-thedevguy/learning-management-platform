@@ -1,3 +1,4 @@
+import { NotFoundComponent } from "@/components/NotFoundComponent";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { asc, eq } from "drizzle-orm";
@@ -53,6 +54,7 @@ export const getProductEditorData = createServerFn()
 export const Route = createFileRoute("/admin/products/$productId/edit")({
 	loader: ({ params }) => getProductEditorData({ data: params }),
 	component: EditProductPage,
+	notFoundComponent: () => <NotFoundComponent />,
 });
 
 function EditProductPage() {

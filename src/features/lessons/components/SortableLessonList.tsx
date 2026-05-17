@@ -1,5 +1,3 @@
-"use client";
-
 import { EyeClosed, Trash2Icon, VideoIcon } from "lucide-react";
 import { ActionButton } from "@/components/ActionButton";
 import { SortableItem, SortableList } from "@/components/SortableList";

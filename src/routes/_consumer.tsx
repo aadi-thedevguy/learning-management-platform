@@ -1,7 +1,9 @@
 import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { HomeIcon } from "lucide-react";
+import { HasPermission } from "@/components/HasPermission";
 import { Button } from "@/components/ui/button";
+import { canAccessAdminPages } from "@/permissions/general";
 
 export const Route = createFileRoute("/_consumer")({
 	component: ConsumerLayout,
@@ -25,13 +27,15 @@ function ConsumerLayout() {
 						<HomeIcon />
 					</Link>
 					<Show when="signed-in">
+						<HasPermission permission={canAccessAdminPages}>
+							<Link
+								className="hover:bg-accent/10 flex items-center px-2"
+								to="/admin"
+							>
+								Admin
+							</Link>
+						</HasPermission>
 						<Link
-							className="hover:bg-accent/10 flex items-center px-2"
-							to="/admin"
-						>
-							Admin
-						</Link>
-						{/* <Link
 							className="hover:bg-accent/10 flex items-center px-2"
 							to="/courses"
 						>
@@ -42,7 +46,7 @@ function ConsumerLayout() {
 							to="/purchases"
 						>
 							Purchase History
-						</Link> */}
+						</Link>
 						<div className="size-8 self-center">
 							<UserButton
 								appearance={{

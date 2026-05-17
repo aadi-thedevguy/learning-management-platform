@@ -1,5 +1,3 @@
-"use client";
-
 import { Loader2Icon } from "lucide-react";
 import {
 	type ComponentPropsWithRef,
@@ -20,6 +18,7 @@ import {
 	AlertDialogTrigger,
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
+import { useRouter } from "@tanstack/react-router";
 
 export function ActionButton({
 	action,
@@ -31,11 +30,13 @@ export function ActionButton({
 }) {
 	{
 		const [isLoading, startTransition] = useTransition();
+		const router = useRouter();
 
 		function performAction() {
 			startTransition(async () => {
 				const data = await action();
 				actionToast({ actionData: data });
+				router.invalidate();
 			});
 		}
 

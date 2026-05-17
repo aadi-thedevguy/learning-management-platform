@@ -18,59 +18,127 @@ import { lessonSchema } from "../schemas/lessons";
 export const createLessonFn = createServerFn({ method: "POST" })
 	.inputValidator(lessonSchema)
 	.handler(async ({ data }) => {
-		if (!canCreateLessons(await getCurrentUser())) {
+		try {
+			if (!canCreateLessons(await getCurrentUser())) {
+				return {
+					error: true,
+					message: "There was an error creating your lesson",
+				};
+			}
+
+			const order = await getNextCourseLessonOrder(data.sectionId);
+			const lesson = await insertLesson({ ...data, order });
+
+			return {
+				error: false,
+				message: "Successfully created your lesson",
+				data: { lessonId: lesson.id },
+			};
+		} catch (error) {
+			console.error("Failed to add lesson:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+					data: {},
+				};
+			}
 			return {
 				error: true,
-				message: "There was an error creating your lesson",
+				message: "Failed to add lesson",
+				data: {},
 			};
 		}
-
-		const order = await getNextCourseLessonOrder(data.sectionId);
-		await insertLesson({ ...data, order });
-
-		return { error: false, message: "Successfully created your lesson" };
 	});
 
 export const updateLessonFn = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ id: z.string(), values: lessonSchema }))
 	.handler(async ({ data }) => {
-		if (!canUpdateLessons(await getCurrentUser())) {
+		try {
+			if (!canUpdateLessons(await getCurrentUser())) {
+				return {
+					error: true,
+					message: "There was an error updating your lesson",
+				};
+			}
+
+			await updateLessonDb(data.id, data.values);
+
+			return {
+				error: false,
+				message: "Successfully updated your lesson",
+				data: {},
+			};
+		} catch (error) {
+			console.error("Failed to update lesson:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+					data: {},
+				};
+			}
 			return {
 				error: true,
-				message: "There was an error updating your lesson",
+				message: "Failed to update lesson",
+				data: {},
 			};
 		}
-
-		await updateLessonDb(data.id, data.values);
-
-		return { error: false, message: "Successfully updated your lesson" };
 	});
 
 export const deleteLessonFn = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
-		if (!canDeleteLessons(await getCurrentUser())) {
-			return { error: true, message: "Error deleting your lesson" };
+		try {
+			if (!canDeleteLessons(await getCurrentUser())) {
+				return { error: true, message: "Error deleting your lesson" };
+			}
+
+			await deleteLessonDb(data.id);
+
+			return { error: false, message: "Successfully deleted your lesson" };
+		} catch (error) {
+			console.error("Failed to delete lesson:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+				};
+			}
+			return {
+				error: true,
+				message: "Failed to delete lesson",
+			};
 		}
-
-		await deleteLessonDb(data.id);
-
-		return { error: false, message: "Successfully deleted your lesson" };
 	});
 
 export const updateLessonOrdersFn = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ lessonIds: z.array(z.string()) }))
 	.handler(async ({ data }) => {
-		if (
-			data.lessonIds.length === 0 ||
-			!canUpdateLessons(await getCurrentUser())
-		) {
-			return { error: true, message: "Error reordering your lessons" };
+		try {
+			if (
+				data.lessonIds.length === 0 ||
+				!canUpdateLessons(await getCurrentUser())
+			) {
+				return { error: true, message: "Error reordering your lessons" };
+			}
+
+			await updateLessonOrdersDb(data.lessonIds);
+
+			return { error: false, message: "Successfully reordered your lessons" };
+		} catch (error) {
+			console.error("Failed to reorder lessons:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+				};
+			}
+			return {
+				error: true,
+				message: "Failed to reorder lessons",
+			};
 		}
-
-		await updateLessonOrdersDb(data.lessonIds);
-
-		return { error: false, message: "Successfully reordered your lessons" };
 	});
 
 export function createLesson(unsafeData: z.infer<typeof lessonSchema>) {

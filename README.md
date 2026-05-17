@@ -70,14 +70,13 @@ npm start
 
 ```
 lms-tanstack/
-├── app/                    # Application code
+├── src/                    # Application code
 │   ├── components/         # Reusable components
 │   ├── routes/             # Application routes
-│   ├── styles/             # Global styles
 │   └── lib/                # Utility functions
 │   └── drizzle/            # Database schema and migrations
 │   └── features/           # Feature-based code organization
-├── public/                 # Static assets
+├── public/                 # Static 
 ```
 
 ## 🤝 Contributing

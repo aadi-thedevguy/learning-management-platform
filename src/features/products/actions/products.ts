@@ -1,4 +1,3 @@
-import { redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import {
@@ -17,43 +16,97 @@ import { productSchema } from "../schema/products";
 export const createProductFn = createServerFn({ method: "POST" })
 	.inputValidator(productSchema)
 	.handler(async ({ data }) => {
-		if (!canCreateProducts(await getCurrentUser())) {
+		try {
+			if (!canCreateProducts(await getCurrentUser())) {
+				return {
+					error: true,
+					message: "There was an error creating your product",
+				};
+			}
+
+			const product = await insertProduct(data);
+
+			return {
+				error: false,
+				message: "Successfully created your product",
+				data: { productId: product.id },
+			};
+		} catch (error) {
+			console.error("Failed to add product:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+					data: {},
+				};
+			}
 			return {
 				error: true,
-				message: "There was an error creating your product",
+				message: "Failed to add product",
+				data: {},
 			};
 		}
-
-		await insertProduct(data);
-
-		throw redirect({ to: "/admin/products" });
 	});
 
 export const updateProductFn = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ id: z.string(), values: productSchema }))
 	.handler(async ({ data }) => {
-		if (!canUpdateProducts(await getCurrentUser())) {
+		try {
+			if (!canUpdateProducts(await getCurrentUser())) {
+				return {
+					error: true,
+					message: "There was an error updating your product",
+				};
+			}
+
+			await updateProductDb(data.id, data.values);
+
+			return {
+				error: false,
+				message: "Successfully updated your product",
+				data: {},
+			};
+		} catch (error) {
+			console.error("Failed to update product:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+					data: {},
+				};
+			}
 			return {
 				error: true,
-				message: "There was an error updating your product",
+				message: "Failed to update product",
+				data: {},
 			};
 		}
-
-		await updateProductDb(data.id, data.values);
-
-		throw redirect({ to: "/admin/products" });
 	});
 
 export const deleteProductFn = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
-		if (!canDeleteProducts(await getCurrentUser())) {
-			return { error: true, message: "Error deleting your product" };
+		try {
+			if (!canDeleteProducts(await getCurrentUser())) {
+				return { error: true, message: "Error deleting your product" };
+			}
+
+			await deleteProductDb(data.id);
+
+			return { error: false, message: "Successfully deleted your product" };
+		} catch (error) {
+			console.error("Failed to delete product:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+				};
+			}
+			return {
+				error: true,
+				message: "Failed to delete product",
+			};
 		}
-
-		await deleteProductDb(data.id);
-
-		return { error: false, message: "Successfully deleted your product" };
 	});
 
 export function createProduct(unsafeData: z.infer<typeof productSchema>) {

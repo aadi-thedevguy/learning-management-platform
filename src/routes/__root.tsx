@@ -5,6 +5,8 @@ import {
 	Outlet,
 	Scripts,
 } from "@tanstack/react-router";
+import { ErrorComponent } from "@/components/ErrorComponent";
+import { NotFoundComponent } from "@/components/NotFoundComponent";
 import { Toaster } from "@/components/ui/toaster";
 import appCss from "../styles.css?url";
 
@@ -17,6 +19,8 @@ export const Route = createRootRoute({
 		],
 		links: [{ rel: "stylesheet", href: appCss }],
 	}),
+	notFoundComponent: () => <NotFoundComponent />,
+	errorComponent: ({ error }) => <ErrorComponent error={error} />,
 	shellComponent: RootDocument,
 	component: RootComponent,
 });
@@ -32,7 +36,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 				<head>
 					<HeadContent />
 				</head>
-				<body className="antialiased mx-auto p-4">
+				<body className="antialiased">
 					{children}
 					<Toaster />
 					<Scripts />

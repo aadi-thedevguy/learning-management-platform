@@ -18,44 +18,102 @@ import { sectionSchema } from "../schemas/sections";
 export const createSectionFn = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ courseId: z.string(), values: sectionSchema }))
 	.handler(async ({ data }) => {
-		if (!canCreateCourseSections(await getCurrentUser())) {
+		try {
+			if (!canCreateCourseSections(await getCurrentUser())) {
+				return {
+					error: true,
+					message: "There was an error creating your section",
+				};
+			}
+
+			const order = await getNextCourseSectionOrder(data.courseId);
+			const section = await insertSection({
+				...data.values,
+				courseId: data.courseId,
+				order,
+			});
+
+			return {
+				error: false,
+				message: "Successfully created your section",
+				data: { sectionId: section.id },
+			};
+		} catch (error) {
+			console.error("Failed to add section:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+					data: {},
+				};
+			}
 			return {
 				error: true,
-				message: "There was an error creating your section",
+				message: "Failed to add section",
+				data: {},
 			};
 		}
-
-		const order = await getNextCourseSectionOrder(data.courseId);
-		await insertSection({ ...data.values, courseId: data.courseId, order });
-
-		return { error: false, message: "Successfully created your section" };
 	});
 
 export const updateSectionFn = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ id: z.string(), values: sectionSchema }))
 	.handler(async ({ data }) => {
-		if (!canUpdateCourseSections(await getCurrentUser())) {
+		try {
+			if (!canUpdateCourseSections(await getCurrentUser())) {
+				return {
+					error: true,
+					message: "There was an error updating your section",
+				};
+			}
+
+			await updateSectionDb(data.id, data.values);
+
+			return {
+				error: false,
+				message: "Successfully updated your section",
+				data: {},
+			};
+		} catch (error) {
+			console.error("Failed to update section:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+					data: {},
+				};
+			}
 			return {
 				error: true,
-				message: "There was an error updating your section",
+				message: "Failed to update section",
+				data: {},
 			};
 		}
-
-		await updateSectionDb(data.id, data.values);
-
-		return { error: false, message: "Successfully updated your section" };
 	});
 
 export const deleteSectionFn = createServerFn({ method: "POST" })
 	.inputValidator(z.object({ id: z.string() }))
 	.handler(async ({ data }) => {
-		if (!canDeleteCourseSections(await getCurrentUser())) {
-			return { error: true, message: "Error deleting your section" };
+		try {
+			if (!canDeleteCourseSections(await getCurrentUser())) {
+				return { error: true, message: "Error deleting your section" };
+			}
+
+			await deleteSectionDb(data.id);
+
+			return { error: false, message: "Successfully deleted your section" };
+		} catch (error) {
+			console.error("Failed to delete section:", error);
+			if (error instanceof Error) {
+				return {
+					error: true,
+					message: error.message,
+				};
+			}
+			return {
+				error: true,
+				message: "Failed to delete section",
+			};
 		}
-
-		await deleteSectionDb(data.id);
-
-		return { error: false, message: "Successfully deleted your section" };
 	});
 
 export const updateSectionOrdersFn = createServerFn({ method: "POST" })

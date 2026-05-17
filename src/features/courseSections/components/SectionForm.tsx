@@ -1,4 +1,4 @@
-"use client";
+import { useRouter } from "@tanstack/react-router";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -42,6 +42,7 @@ export function SectionForm({
 	courseId: string;
 	onSuccess?: () => void;
 }) {
+	const router = useRouter();
 	const form = useForm<z.infer<typeof sectionSchema>>({
 		resolver: zodResolver(sectionSchema),
 		defaultValues: section ?? {
@@ -58,6 +59,7 @@ export function SectionForm({
 		const data = await action(values);
 		actionToast({ actionData: data });
 		if (!data.error) onSuccess?.();
+		router.invalidate();
 	}
 
 	return (
@@ -113,7 +115,13 @@ export function SectionForm({
 				</div>
 				<div className="self-end">
 					<Button disabled={form.formState.isSubmitting} type="submit">
-						Save
+						{form.formState.isSubmitting
+							? section
+								? "Updating..."
+								: "Creating..."
+							: section
+								? "Update"
+								: "Create"}
 					</Button>
 				</div>
 			</form>
