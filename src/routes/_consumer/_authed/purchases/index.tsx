@@ -25,7 +25,7 @@ export const getPurchases = createServerFn().handler(async () => {
 	});
 });
 
-export const Route = createFileRoute("/_consumer/purchases/")({
+export const Route = createFileRoute("/_consumer/_authed/purchases/")({
 	loader: () => getPurchases(),
 	component: PurchasesPage,
 });

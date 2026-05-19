@@ -54,7 +54,7 @@ export const getPurchase = createServerFn()
 		};
 	});
 
-export const Route = createFileRoute("/_consumer/purchases/$purchaseId")({
+export const Route = createFileRoute("/_consumer/_authed/purchases/$purchaseId")({
 	loader: ({ params }) => getPurchase({ data: params }),
 	component: PurchasePage,
 	notFoundComponent: () => <NotFoundComponent />,

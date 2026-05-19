@@ -39,7 +39,7 @@ function ProductPurchaseSuccessPage() {
 					<Link to="/courses">View My Courses</Link>
 				</Button>
 			</div>
-			<div className="relative aspect-video max-w-lg flex-grow">
+			<div className="relative aspect-video max-w-lg grow">
 				<Image
 					src={product.imageUrl}
 					alt={product.name}

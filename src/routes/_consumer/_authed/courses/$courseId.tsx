@@ -19,7 +19,7 @@ export const getCourse = createServerFn()
 		return course;
 	});
 
-export const Route = createFileRoute("/_consumer/courses/$courseId")({
+export const Route = createFileRoute("/_consumer/_authed/courses/$courseId")({
 	loader: ({ params }) => getCourse({ data: params }),
 	component: CoursePage,
 	notFoundComponent: () => <NotFoundComponent />,

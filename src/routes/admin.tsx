@@ -1,34 +1,19 @@
 import { UserButton } from "@clerk/tanstack-react-start";
-import { auth } from "@clerk/tanstack-react-start/server";
 import {
 	createFileRoute,
 	Link,
 	Outlet,
-	redirect,
+	notFound,
 } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import { Home } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { getUser } from "@/services/clerk";
-
-export const requireAdmin = createServerFn({ method: "GET" }).handler(
-	async () => {
-		const authState = await auth();
-		const claims = authState.sessionClaims as { dbId?: string } | undefined;
-
-		if (!authState.userId) throw redirect({ to: "/sign-in/$" });
-		if (!claims?.dbId) throw redirect({ to: "/sign-in/$" });
-
-		const user = await getUser(claims.dbId);
-		if (!user) throw redirect({ to: "/sign-in/$" });
-		if (user.role !== "admin") throw redirect({ to: "/" });
-
-		return null;
-	},
-);
 
 export const Route = createFileRoute("/admin")({
-	beforeLoad: () => requireAdmin(),
+	beforeLoad: ({ context }) => {
+		if (context.role !== "admin") {
+			throw notFound();
+		}
+	},
 	component: AdminLayout,
 });
 

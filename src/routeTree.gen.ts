@@ -16,22 +16,23 @@ import { Route as ConsumerIndexRouteImport } from './routes/_consumer/index'
 import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
 import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
 import { Route as AdminSalesRouteImport } from './routes/admin/sales'
+import { Route as ConsumerAuthedRouteImport } from './routes/_consumer/_authed'
 import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/index'
 import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
-import { Route as ConsumerPurchasesIndexRouteImport } from './routes/_consumer/purchases/index'
-import { Route as ConsumerCoursesIndexRouteImport } from './routes/_consumer/courses/index'
 import { Route as ApiWebhooksPaymentRouteImport } from './routes/api/webhooks/payment'
 import { Route as ApiWebhooksClerkRouteImport } from './routes/api/webhooks/clerk'
 import { Route as AdminProductsNewRouteImport } from './routes/admin/products/new'
 import { Route as AdminCoursesNewRouteImport } from './routes/admin/courses/new'
-import { Route as ConsumerPurchasesPurchaseIdRouteImport } from './routes/_consumer/purchases/$purchaseId'
 import { Route as ConsumerProductsPurchaseFailureRouteImport } from './routes/_consumer/products/purchase-failure'
 import { Route as ConsumerProductsProductIdRouteImport } from './routes/_consumer/products/$productId'
-import { Route as ConsumerCoursesCourseIdRouteImport } from './routes/_consumer/courses/$courseId'
+import { Route as ConsumerAuthedPurchasesIndexRouteImport } from './routes/_consumer/_authed/purchases/index'
+import { Route as ConsumerAuthedCoursesIndexRouteImport } from './routes/_consumer/_authed/courses/index'
 import { Route as ApiPurchasesPaymentIdInvoiceRouteImport } from './routes/api/purchases/$paymentId.invoice'
 import { Route as AdminProductsProductIdEditRouteImport } from './routes/admin/products/$productId.edit'
 import { Route as AdminCoursesCourseIdEditRouteImport } from './routes/admin/courses/$courseId.edit'
 import { Route as ConsumerProductsProductIdPurchaseRouteImport } from './routes/_consumer/products/$productId.purchase'
+import { Route as ConsumerAuthedPurchasesPurchaseIdRouteImport } from './routes/_consumer/_authed/purchases/$purchaseId'
+import { Route as ConsumerAuthedCoursesCourseIdRouteImport } from './routes/_consumer/_authed/courses/$courseId'
 import { Route as ConsumerProductsProductIdPurchaseSuccessRouteImport } from './routes/_consumer/products/$productId.purchase.success'
 import { Route as ConsumerCoursesCourseIdLessonsLessonIdRouteImport } from './routes/_consumer/courses/$courseId.lessons.$lessonId'
 
@@ -69,6 +70,10 @@ const AdminSalesRoute = AdminSalesRouteImport.update({
   path: '/sales',
   getParentRoute: () => AdminRoute,
 } as any)
+const ConsumerAuthedRoute = ConsumerAuthedRouteImport.update({
+  id: '/_authed',
+  getParentRoute: () => ConsumerRoute,
+} as any)
 const AdminProductsIndexRoute = AdminProductsIndexRouteImport.update({
   id: '/products/',
   path: '/products/',
@@ -78,16 +83,6 @@ const AdminCoursesIndexRoute = AdminCoursesIndexRouteImport.update({
   id: '/courses/',
   path: '/courses/',
   getParentRoute: () => AdminRoute,
-} as any)
-const ConsumerPurchasesIndexRoute = ConsumerPurchasesIndexRouteImport.update({
-  id: '/purchases/',
-  path: '/purchases/',
-  getParentRoute: () => ConsumerRoute,
-} as any)
-const ConsumerCoursesIndexRoute = ConsumerCoursesIndexRouteImport.update({
-  id: '/courses/',
-  path: '/courses/',
-  getParentRoute: () => ConsumerRoute,
 } as any)
 const ApiWebhooksPaymentRoute = ApiWebhooksPaymentRouteImport.update({
   id: '/api/webhooks/payment',
@@ -109,12 +104,6 @@ const AdminCoursesNewRoute = AdminCoursesNewRouteImport.update({
   path: '/courses/new',
   getParentRoute: () => AdminRoute,
 } as any)
-const ConsumerPurchasesPurchaseIdRoute =
-  ConsumerPurchasesPurchaseIdRouteImport.update({
-    id: '/purchases/$purchaseId',
-    path: '/purchases/$purchaseId',
-    getParentRoute: () => ConsumerRoute,
-  } as any)
 const ConsumerProductsPurchaseFailureRoute =
   ConsumerProductsPurchaseFailureRouteImport.update({
     id: '/products/purchase-failure',
@@ -127,11 +116,18 @@ const ConsumerProductsProductIdRoute =
     path: '/products/$productId',
     getParentRoute: () => ConsumerRoute,
   } as any)
-const ConsumerCoursesCourseIdRoute = ConsumerCoursesCourseIdRouteImport.update({
-  id: '/courses/$courseId',
-  path: '/courses/$courseId',
-  getParentRoute: () => ConsumerRoute,
-} as any)
+const ConsumerAuthedPurchasesIndexRoute =
+  ConsumerAuthedPurchasesIndexRouteImport.update({
+    id: '/purchases/',
+    path: '/purchases/',
+    getParentRoute: () => ConsumerAuthedRoute,
+  } as any)
+const ConsumerAuthedCoursesIndexRoute =
+  ConsumerAuthedCoursesIndexRouteImport.update({
+    id: '/courses/',
+    path: '/courses/',
+    getParentRoute: () => ConsumerAuthedRoute,
+  } as any)
 const ApiPurchasesPaymentIdInvoiceRoute =
   ApiPurchasesPaymentIdInvoiceRouteImport.update({
     id: '/api/purchases/$paymentId/invoice',
@@ -156,6 +152,18 @@ const ConsumerProductsProductIdPurchaseRoute =
     path: '/purchase',
     getParentRoute: () => ConsumerProductsProductIdRoute,
   } as any)
+const ConsumerAuthedPurchasesPurchaseIdRoute =
+  ConsumerAuthedPurchasesPurchaseIdRouteImport.update({
+    id: '/purchases/$purchaseId',
+    path: '/purchases/$purchaseId',
+    getParentRoute: () => ConsumerAuthedRoute,
+  } as any)
+const ConsumerAuthedCoursesCourseIdRoute =
+  ConsumerAuthedCoursesCourseIdRouteImport.update({
+    id: '/courses/$courseId',
+    path: '/courses/$courseId',
+    getParentRoute: () => ConsumerAuthedRoute,
+  } as any)
 const ConsumerProductsProductIdPurchaseSuccessRoute =
   ConsumerProductsProductIdPurchaseSuccessRouteImport.update({
     id: '/success',
@@ -164,9 +172,9 @@ const ConsumerProductsProductIdPurchaseSuccessRoute =
   } as any)
 const ConsumerCoursesCourseIdLessonsLessonIdRoute =
   ConsumerCoursesCourseIdLessonsLessonIdRouteImport.update({
-    id: '/lessons/$lessonId',
-    path: '/lessons/$lessonId',
-    getParentRoute: () => ConsumerCoursesCourseIdRoute,
+    id: '/courses/$courseId/lessons/$lessonId',
+    path: '/courses/$courseId/lessons/$lessonId',
+    getParentRoute: () => ConsumerRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -176,47 +184,47 @@ export interface FileRoutesByFullPath {
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
   '/admin/': typeof AdminIndexRoute
-  '/courses/$courseId': typeof ConsumerCoursesCourseIdRouteWithChildren
   '/products/$productId': typeof ConsumerProductsProductIdRouteWithChildren
   '/products/purchase-failure': typeof ConsumerProductsPurchaseFailureRoute
-  '/purchases/$purchaseId': typeof ConsumerPurchasesPurchaseIdRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
   '/admin/products/new': typeof AdminProductsNewRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
   '/api/webhooks/payment': typeof ApiWebhooksPaymentRoute
-  '/courses/': typeof ConsumerCoursesIndexRoute
-  '/purchases/': typeof ConsumerPurchasesIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
+  '/courses/$courseId': typeof ConsumerAuthedCoursesCourseIdRoute
+  '/purchases/$purchaseId': typeof ConsumerAuthedPurchasesPurchaseIdRoute
   '/products/$productId/purchase': typeof ConsumerProductsProductIdPurchaseRouteWithChildren
   '/admin/courses/$courseId/edit': typeof AdminCoursesCourseIdEditRoute
   '/admin/products/$productId/edit': typeof AdminProductsProductIdEditRoute
   '/api/purchases/$paymentId/invoice': typeof ApiPurchasesPaymentIdInvoiceRoute
+  '/courses/': typeof ConsumerAuthedCoursesIndexRoute
+  '/purchases/': typeof ConsumerAuthedPurchasesIndexRoute
   '/courses/$courseId/lessons/$lessonId': typeof ConsumerCoursesCourseIdLessonsLessonIdRoute
   '/products/$productId/purchase/success': typeof ConsumerProductsProductIdPurchaseSuccessRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof ConsumerIndexRoute
   '/admin/sales': typeof AdminSalesRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
-  '/': typeof ConsumerIndexRoute
   '/admin': typeof AdminIndexRoute
-  '/courses/$courseId': typeof ConsumerCoursesCourseIdRouteWithChildren
   '/products/$productId': typeof ConsumerProductsProductIdRouteWithChildren
   '/products/purchase-failure': typeof ConsumerProductsPurchaseFailureRoute
-  '/purchases/$purchaseId': typeof ConsumerPurchasesPurchaseIdRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
   '/admin/products/new': typeof AdminProductsNewRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
   '/api/webhooks/payment': typeof ApiWebhooksPaymentRoute
-  '/courses': typeof ConsumerCoursesIndexRoute
-  '/purchases': typeof ConsumerPurchasesIndexRoute
   '/admin/courses': typeof AdminCoursesIndexRoute
   '/admin/products': typeof AdminProductsIndexRoute
+  '/courses/$courseId': typeof ConsumerAuthedCoursesCourseIdRoute
+  '/purchases/$purchaseId': typeof ConsumerAuthedPurchasesPurchaseIdRoute
   '/products/$productId/purchase': typeof ConsumerProductsProductIdPurchaseRouteWithChildren
   '/admin/courses/$courseId/edit': typeof AdminCoursesCourseIdEditRoute
   '/admin/products/$productId/edit': typeof AdminProductsProductIdEditRoute
   '/api/purchases/$paymentId/invoice': typeof ApiPurchasesPaymentIdInvoiceRoute
+  '/courses': typeof ConsumerAuthedCoursesIndexRoute
+  '/purchases': typeof ConsumerAuthedPurchasesIndexRoute
   '/courses/$courseId/lessons/$lessonId': typeof ConsumerCoursesCourseIdLessonsLessonIdRoute
   '/products/$productId/purchase/success': typeof ConsumerProductsProductIdPurchaseSuccessRoute
 }
@@ -224,27 +232,28 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_consumer': typeof ConsumerRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/_consumer/_authed': typeof ConsumerAuthedRouteWithChildren
   '/admin/sales': typeof AdminSalesRoute
   '/sign-in/$': typeof SignInSplatRoute
   '/sign-up/$': typeof SignUpSplatRoute
   '/_consumer/': typeof ConsumerIndexRoute
   '/admin/': typeof AdminIndexRoute
-  '/_consumer/courses/$courseId': typeof ConsumerCoursesCourseIdRouteWithChildren
   '/_consumer/products/$productId': typeof ConsumerProductsProductIdRouteWithChildren
   '/_consumer/products/purchase-failure': typeof ConsumerProductsPurchaseFailureRoute
-  '/_consumer/purchases/$purchaseId': typeof ConsumerPurchasesPurchaseIdRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
   '/admin/products/new': typeof AdminProductsNewRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
   '/api/webhooks/payment': typeof ApiWebhooksPaymentRoute
-  '/_consumer/courses/': typeof ConsumerCoursesIndexRoute
-  '/_consumer/purchases/': typeof ConsumerPurchasesIndexRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
+  '/_consumer/_authed/courses/$courseId': typeof ConsumerAuthedCoursesCourseIdRoute
+  '/_consumer/_authed/purchases/$purchaseId': typeof ConsumerAuthedPurchasesPurchaseIdRoute
   '/_consumer/products/$productId/purchase': typeof ConsumerProductsProductIdPurchaseRouteWithChildren
   '/admin/courses/$courseId/edit': typeof AdminCoursesCourseIdEditRoute
   '/admin/products/$productId/edit': typeof AdminProductsProductIdEditRoute
   '/api/purchases/$paymentId/invoice': typeof ApiPurchasesPaymentIdInvoiceRoute
+  '/_consumer/_authed/courses/': typeof ConsumerAuthedCoursesIndexRoute
+  '/_consumer/_authed/purchases/': typeof ConsumerAuthedPurchasesIndexRoute
   '/_consumer/courses/$courseId/lessons/$lessonId': typeof ConsumerCoursesCourseIdLessonsLessonIdRoute
   '/_consumer/products/$productId/purchase/success': typeof ConsumerProductsProductIdPurchaseSuccessRoute
 }
@@ -257,74 +266,75 @@ export interface FileRouteTypes {
     | '/sign-in/$'
     | '/sign-up/$'
     | '/admin/'
-    | '/courses/$courseId'
     | '/products/$productId'
     | '/products/purchase-failure'
-    | '/purchases/$purchaseId'
     | '/admin/courses/new'
     | '/admin/products/new'
     | '/api/webhooks/clerk'
     | '/api/webhooks/payment'
-    | '/courses/'
-    | '/purchases/'
     | '/admin/courses/'
     | '/admin/products/'
+    | '/courses/$courseId'
+    | '/purchases/$purchaseId'
     | '/products/$productId/purchase'
     | '/admin/courses/$courseId/edit'
     | '/admin/products/$productId/edit'
     | '/api/purchases/$paymentId/invoice'
+    | '/courses/'
+    | '/purchases/'
     | '/courses/$courseId/lessons/$lessonId'
     | '/products/$productId/purchase/success'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/admin/sales'
     | '/sign-in/$'
     | '/sign-up/$'
-    | '/'
     | '/admin'
-    | '/courses/$courseId'
     | '/products/$productId'
     | '/products/purchase-failure'
-    | '/purchases/$purchaseId'
     | '/admin/courses/new'
     | '/admin/products/new'
     | '/api/webhooks/clerk'
     | '/api/webhooks/payment'
-    | '/courses'
-    | '/purchases'
     | '/admin/courses'
     | '/admin/products'
+    | '/courses/$courseId'
+    | '/purchases/$purchaseId'
     | '/products/$productId/purchase'
     | '/admin/courses/$courseId/edit'
     | '/admin/products/$productId/edit'
     | '/api/purchases/$paymentId/invoice'
+    | '/courses'
+    | '/purchases'
     | '/courses/$courseId/lessons/$lessonId'
     | '/products/$productId/purchase/success'
   id:
     | '__root__'
     | '/_consumer'
     | '/admin'
+    | '/_consumer/_authed'
     | '/admin/sales'
     | '/sign-in/$'
     | '/sign-up/$'
     | '/_consumer/'
     | '/admin/'
-    | '/_consumer/courses/$courseId'
     | '/_consumer/products/$productId'
     | '/_consumer/products/purchase-failure'
-    | '/_consumer/purchases/$purchaseId'
     | '/admin/courses/new'
     | '/admin/products/new'
     | '/api/webhooks/clerk'
     | '/api/webhooks/payment'
-    | '/_consumer/courses/'
-    | '/_consumer/purchases/'
     | '/admin/courses/'
     | '/admin/products/'
+    | '/_consumer/_authed/courses/$courseId'
+    | '/_consumer/_authed/purchases/$purchaseId'
     | '/_consumer/products/$productId/purchase'
     | '/admin/courses/$courseId/edit'
     | '/admin/products/$productId/edit'
     | '/api/purchases/$paymentId/invoice'
+    | '/_consumer/_authed/courses/'
+    | '/_consumer/_authed/purchases/'
     | '/_consumer/courses/$courseId/lessons/$lessonId'
     | '/_consumer/products/$productId/purchase/success'
   fileRoutesById: FileRoutesById
@@ -390,6 +400,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSalesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/_consumer/_authed': {
+      id: '/_consumer/_authed'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ConsumerAuthedRouteImport
+      parentRoute: typeof ConsumerRoute
+    }
     '/admin/products/': {
       id: '/admin/products/'
       path: '/products'
@@ -403,20 +420,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/courses/'
       preLoaderRoute: typeof AdminCoursesIndexRouteImport
       parentRoute: typeof AdminRoute
-    }
-    '/_consumer/purchases/': {
-      id: '/_consumer/purchases/'
-      path: '/purchases'
-      fullPath: '/purchases/'
-      preLoaderRoute: typeof ConsumerPurchasesIndexRouteImport
-      parentRoute: typeof ConsumerRoute
-    }
-    '/_consumer/courses/': {
-      id: '/_consumer/courses/'
-      path: '/courses'
-      fullPath: '/courses/'
-      preLoaderRoute: typeof ConsumerCoursesIndexRouteImport
-      parentRoute: typeof ConsumerRoute
     }
     '/api/webhooks/payment': {
       id: '/api/webhooks/payment'
@@ -446,13 +449,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCoursesNewRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/_consumer/purchases/$purchaseId': {
-      id: '/_consumer/purchases/$purchaseId'
-      path: '/purchases/$purchaseId'
-      fullPath: '/purchases/$purchaseId'
-      preLoaderRoute: typeof ConsumerPurchasesPurchaseIdRouteImport
-      parentRoute: typeof ConsumerRoute
-    }
     '/_consumer/products/purchase-failure': {
       id: '/_consumer/products/purchase-failure'
       path: '/products/purchase-failure'
@@ -467,12 +463,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumerProductsProductIdRouteImport
       parentRoute: typeof ConsumerRoute
     }
-    '/_consumer/courses/$courseId': {
-      id: '/_consumer/courses/$courseId'
-      path: '/courses/$courseId'
-      fullPath: '/courses/$courseId'
-      preLoaderRoute: typeof ConsumerCoursesCourseIdRouteImport
-      parentRoute: typeof ConsumerRoute
+    '/_consumer/_authed/purchases/': {
+      id: '/_consumer/_authed/purchases/'
+      path: '/purchases'
+      fullPath: '/purchases/'
+      preLoaderRoute: typeof ConsumerAuthedPurchasesIndexRouteImport
+      parentRoute: typeof ConsumerAuthedRoute
+    }
+    '/_consumer/_authed/courses/': {
+      id: '/_consumer/_authed/courses/'
+      path: '/courses'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof ConsumerAuthedCoursesIndexRouteImport
+      parentRoute: typeof ConsumerAuthedRoute
     }
     '/api/purchases/$paymentId/invoice': {
       id: '/api/purchases/$paymentId/invoice'
@@ -502,6 +505,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumerProductsProductIdPurchaseRouteImport
       parentRoute: typeof ConsumerProductsProductIdRoute
     }
+    '/_consumer/_authed/purchases/$purchaseId': {
+      id: '/_consumer/_authed/purchases/$purchaseId'
+      path: '/purchases/$purchaseId'
+      fullPath: '/purchases/$purchaseId'
+      preLoaderRoute: typeof ConsumerAuthedPurchasesPurchaseIdRouteImport
+      parentRoute: typeof ConsumerAuthedRoute
+    }
+    '/_consumer/_authed/courses/$courseId': {
+      id: '/_consumer/_authed/courses/$courseId'
+      path: '/courses/$courseId'
+      fullPath: '/courses/$courseId'
+      preLoaderRoute: typeof ConsumerAuthedCoursesCourseIdRouteImport
+      parentRoute: typeof ConsumerAuthedRoute
+    }
     '/_consumer/products/$productId/purchase/success': {
       id: '/_consumer/products/$productId/purchase/success'
       path: '/success'
@@ -511,28 +528,32 @@ declare module '@tanstack/react-router' {
     }
     '/_consumer/courses/$courseId/lessons/$lessonId': {
       id: '/_consumer/courses/$courseId/lessons/$lessonId'
-      path: '/lessons/$lessonId'
+      path: '/courses/$courseId/lessons/$lessonId'
       fullPath: '/courses/$courseId/lessons/$lessonId'
       preLoaderRoute: typeof ConsumerCoursesCourseIdLessonsLessonIdRouteImport
-      parentRoute: typeof ConsumerCoursesCourseIdRoute
+      parentRoute: typeof ConsumerRoute
     }
   }
 }
 
-interface ConsumerCoursesCourseIdRouteChildren {
-  ConsumerCoursesCourseIdLessonsLessonIdRoute: typeof ConsumerCoursesCourseIdLessonsLessonIdRoute
+interface ConsumerAuthedRouteChildren {
+  ConsumerAuthedCoursesCourseIdRoute: typeof ConsumerAuthedCoursesCourseIdRoute
+  ConsumerAuthedPurchasesPurchaseIdRoute: typeof ConsumerAuthedPurchasesPurchaseIdRoute
+  ConsumerAuthedCoursesIndexRoute: typeof ConsumerAuthedCoursesIndexRoute
+  ConsumerAuthedPurchasesIndexRoute: typeof ConsumerAuthedPurchasesIndexRoute
 }
 
-const ConsumerCoursesCourseIdRouteChildren: ConsumerCoursesCourseIdRouteChildren =
-  {
-    ConsumerCoursesCourseIdLessonsLessonIdRoute:
-      ConsumerCoursesCourseIdLessonsLessonIdRoute,
-  }
+const ConsumerAuthedRouteChildren: ConsumerAuthedRouteChildren = {
+  ConsumerAuthedCoursesCourseIdRoute: ConsumerAuthedCoursesCourseIdRoute,
+  ConsumerAuthedPurchasesPurchaseIdRoute:
+    ConsumerAuthedPurchasesPurchaseIdRoute,
+  ConsumerAuthedCoursesIndexRoute: ConsumerAuthedCoursesIndexRoute,
+  ConsumerAuthedPurchasesIndexRoute: ConsumerAuthedPurchasesIndexRoute,
+}
 
-const ConsumerCoursesCourseIdRouteWithChildren =
-  ConsumerCoursesCourseIdRoute._addFileChildren(
-    ConsumerCoursesCourseIdRouteChildren,
-  )
+const ConsumerAuthedRouteWithChildren = ConsumerAuthedRoute._addFileChildren(
+  ConsumerAuthedRouteChildren,
+)
 
 interface ConsumerProductsProductIdPurchaseRouteChildren {
   ConsumerProductsProductIdPurchaseSuccessRoute: typeof ConsumerProductsProductIdPurchaseSuccessRoute
@@ -565,23 +586,20 @@ const ConsumerProductsProductIdRouteWithChildren =
   )
 
 interface ConsumerRouteChildren {
+  ConsumerAuthedRoute: typeof ConsumerAuthedRouteWithChildren
   ConsumerIndexRoute: typeof ConsumerIndexRoute
-  ConsumerCoursesCourseIdRoute: typeof ConsumerCoursesCourseIdRouteWithChildren
   ConsumerProductsProductIdRoute: typeof ConsumerProductsProductIdRouteWithChildren
   ConsumerProductsPurchaseFailureRoute: typeof ConsumerProductsPurchaseFailureRoute
-  ConsumerPurchasesPurchaseIdRoute: typeof ConsumerPurchasesPurchaseIdRoute
-  ConsumerCoursesIndexRoute: typeof ConsumerCoursesIndexRoute
-  ConsumerPurchasesIndexRoute: typeof ConsumerPurchasesIndexRoute
+  ConsumerCoursesCourseIdLessonsLessonIdRoute: typeof ConsumerCoursesCourseIdLessonsLessonIdRoute
 }
 
 const ConsumerRouteChildren: ConsumerRouteChildren = {
+  ConsumerAuthedRoute: ConsumerAuthedRouteWithChildren,
   ConsumerIndexRoute: ConsumerIndexRoute,
-  ConsumerCoursesCourseIdRoute: ConsumerCoursesCourseIdRouteWithChildren,
   ConsumerProductsProductIdRoute: ConsumerProductsProductIdRouteWithChildren,
   ConsumerProductsPurchaseFailureRoute: ConsumerProductsPurchaseFailureRoute,
-  ConsumerPurchasesPurchaseIdRoute: ConsumerPurchasesPurchaseIdRoute,
-  ConsumerCoursesIndexRoute: ConsumerCoursesIndexRoute,
-  ConsumerPurchasesIndexRoute: ConsumerPurchasesIndexRoute,
+  ConsumerCoursesCourseIdLessonsLessonIdRoute:
+    ConsumerCoursesCourseIdLessonsLessonIdRoute,
 }
 
 const ConsumerRouteWithChildren = ConsumerRoute._addFileChildren(

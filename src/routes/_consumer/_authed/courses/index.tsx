@@ -38,7 +38,7 @@ export const getUserCourses = createServerFn().handler(async () => {
 			lessonsComplete: countDistinct(UserLessonCompleteTable.lessonId),
 		})
 		.from(CourseTable)
-		.leftJoin(
+		.innerJoin(
 			UserCourseAccessTable,
 			and(
 				eq(UserCourseAccessTable.courseId, CourseTable.id),
@@ -67,7 +67,7 @@ export const getUserCourses = createServerFn().handler(async () => {
 		.groupBy(CourseTable.id);
 });
 
-export const Route = createFileRoute("/_consumer/courses/")({
+export const Route = createFileRoute("/_consumer/_authed/courses/")({
 	loader: () => getUserCourses(),
 	component: CoursesPage,
 });

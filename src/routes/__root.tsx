@@ -1,16 +1,35 @@
 import { ClerkProvider } from "@clerk/tanstack-react-start";
 import {
-	createRootRoute,
+	createRootRouteWithContext,
 	HeadContent,
 	Outlet,
 	Scripts,
 } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { auth } from "@clerk/tanstack-react-start/server";
 import { ErrorComponent } from "@/components/ErrorComponent";
 import { NotFoundComponent } from "@/components/NotFoundComponent";
 import { Toaster } from "@/components/ui/toaster";
 import appCss from "../styles.css?url";
 
-export const Route = createRootRoute({
+interface MyRouterContext {
+	userId: string | null | undefined;
+	role: string | null | undefined;
+}
+
+const fetchClerkAuth = createServerFn({ method: "GET" }).handler(async () => {
+	const { userId, sessionClaims } = await auth();
+	return {
+		userId,
+		role: sessionClaims?.role as string | undefined,
+	};
+});
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+	beforeLoad: async () => {
+		const { userId, role } = await fetchClerkAuth();
+		return { userId, role };
+	},
 	head: () => ({
 		meta: [
 			{ charSet: "utf-8" },

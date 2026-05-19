@@ -9,7 +9,7 @@ export function formatPlural(
 }
 
 export function formatPrice(amount: number, { showZeroAsNumber = false } = {}) {
-	const formatter = new Intl.NumberFormat(undefined, {
+	const formatter = new Intl.NumberFormat("en-US", {
 		style: "currency",
 		currency: "USD",
 		minimumFractionDigits: Number.isInteger(amount) ? 0 : 2,

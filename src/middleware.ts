@@ -1,32 +1,7 @@
 import arcjet, { detectBot, shield, slidingWindow } from "@arcjet/node";
-import { auth } from "@clerk/tanstack-react-start/server";
 import { createMiddleware } from "@tanstack/react-start";
 import { env } from "./env";
 import { setUserCountryHeader } from "./lib/userCountryHeader";
-
-const createRouteMatcher = (patterns: string[]) => {
-	const regexes = patterns.map(
-		(pattern) =>
-			new RegExp(
-				`^${pattern.replace(/\(.*\)/g, ".*").replace(/:[^\s/]+/g, "([^/]+)")}$`,
-			),
-	);
-	return (req: Request) => {
-		const pathname = new URL(req.url).pathname;
-		return regexes.some((r) => r.test(pathname));
-	};
-};
-
-const isPublicRoute = createRouteMatcher([
-	"/",
-	"/sign-in(.*)",
-	"/sign-up(.*)",
-	"/api(.*)",
-	"/courses/:courseId/lessons/:lessonId",
-	"/products(.*)",
-]);
-
-const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 
 const aj = arcjet({
 	key: env.ARCJET_KEY,
@@ -44,7 +19,26 @@ const aj = arcjet({
 	],
 });
 
-export const coreMiddleware = createMiddleware().server(
+// export const authMiddleware = createMiddleware().server(async ({ next }) => {
+// 	const { userId, isAuthenticated } = await auth();
+// 	if (!isAuthenticated) {
+// 		throw new Error("Unauthorized");
+// 	}
+// 	return next({ context: { userId } });
+// });
+
+// export const adminMiddleware = authMiddleware.server(
+// 	async ({ next, context }) => {
+// 		const { sessionClaims } = await auth();
+// 		if (sessionClaims?.role !== "admin") {
+// 			throw new Error("Forbidden");
+// 		}
+// 		return next({ context });
+// 	},
+// );
+
+
+export const arcjetMiddleware = createMiddleware().server(
 	async ({ next, request }) => {
 		// biome-ignore lint/suspicious/noImplicitAnyLet: <explanation>
 		let decision;
@@ -58,20 +52,6 @@ export const coreMiddleware = createMiddleware().server(
 
 		if (decision.isDenied()) {
 			return new Response(null, { status: 403 });
-		}
-
-		if (isAdminRoute(request)) {
-			const { sessionClaims } = await auth();
-			if (sessionClaims?.role !== "admin") {
-				return new Response(null, { status: 404 });
-			}
-		}
-
-		if (!isPublicRoute(request)) {
-			const { isAuthenticated } = await auth();
-			if (!isAuthenticated) {
-				return new Response("Unauthorized", { status: 401 });
-			}
 		}
 
 		if (!decision.ip.isVpn() && !decision.ip.isProxy()) {
