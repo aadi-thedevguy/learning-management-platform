@@ -1,15 +1,4 @@
-// import { SignIn } from "@clerk/tanstack-react-start";
-// import { createFileRoute } from "@tanstack/react-router";
-
-// export const Route = createFileRoute("/sign-in/$")({
-// 	component: () => (
-// 		<div className="container my-6 flex justify-center">
-// 			<SignIn />
-// 		</div>
-// 	),
-// });
-
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,42 +13,52 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "sonner";
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+const resetPasswordSchema = z
+  .object({
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string().min(8),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
+
+export const Route = createFileRoute("/reset-password")({
+  component: ResetPasswordComponent,
 });
 
-export const Route = createFileRoute("/sign-in/$")({
-  component: LoginComponent,
-});
+function ResetPasswordComponent() {
+  const navigate = useNavigate();
 
-function LoginComponent() {
-  const search = Route.useSearch() as { redirect?: string };
-
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof resetPasswordSchema>>({
+    resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof loginSchema>) {
-    await authClient.signIn.email(
+  async function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
+    await authClient.resetPassword(
       {
-        email: values.email,
-        password: values.password,
-        callbackURL: search.redirect || "/dashboard",
+        newPassword: values.password,
       },
       {
-        onError: (ctx) => {
-          toast.error(ctx.error.message || "Login failed");
-        },
         onSuccess: () => {
-          toast.success("Welcome back!");
+          toast.success("Password reset successfully!");
+          navigate({ to: "/login" });
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message || "Failed to reset password");
         },
       },
     );
@@ -69,19 +68,20 @@ function LoginComponent() {
     <div className="flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardTitle className="text-2xl">Reset Password</CardTitle>
+          <CardDescription>Enter your new password below.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="email"
+                name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>New Password</FormLabel>
                     <FormControl>
-                      <Input {...field} type="email" />
+                      <Input {...field} type="password" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -89,10 +89,10 @@ function LoginComponent() {
               />
               <FormField
                 control={form.control}
-                name="password"
+                name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Confirm New Password</FormLabel>
                     <FormControl>
                       <Input {...field} type="password" />
                     </FormControl>
@@ -105,7 +105,9 @@ function LoginComponent() {
                 className="w-full"
                 disabled={form.formState.isSubmitting}
               >
-                {form.formState.isSubmitting ? "Logging in..." : "Login"}
+                {form.formState.isSubmitting
+                  ? "Resetting..."
+                  : "Update Password"}
               </Button>
             </form>
           </Form>

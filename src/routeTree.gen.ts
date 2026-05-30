@@ -21,6 +21,7 @@ import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/
 import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
 import { Route as ApiWebhooksPaymentRouteImport } from './routes/api/webhooks/payment'
 import { Route as ApiWebhooksClerkRouteImport } from './routes/api/webhooks/clerk'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AdminProductsNewRouteImport } from './routes/admin/products/new'
 import { Route as AdminCoursesNewRouteImport } from './routes/admin/courses/new'
 import { Route as ConsumerProductsPurchaseFailureRouteImport } from './routes/_consumer/products/purchase-failure'
@@ -92,6 +93,11 @@ const ApiWebhooksPaymentRoute = ApiWebhooksPaymentRouteImport.update({
 const ApiWebhooksClerkRoute = ApiWebhooksClerkRouteImport.update({
   id: '/api/webhooks/clerk',
   path: '/api/webhooks/clerk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminProductsNewRoute = AdminProductsNewRouteImport.update({
@@ -188,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/products/purchase-failure': typeof ConsumerProductsPurchaseFailureRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
   '/admin/products/new': typeof AdminProductsNewRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
   '/api/webhooks/payment': typeof ApiWebhooksPaymentRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
@@ -213,6 +220,7 @@ export interface FileRoutesByTo {
   '/products/purchase-failure': typeof ConsumerProductsPurchaseFailureRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
   '/admin/products/new': typeof AdminProductsNewRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
   '/api/webhooks/payment': typeof ApiWebhooksPaymentRoute
   '/admin/courses': typeof AdminCoursesIndexRoute
@@ -242,6 +250,7 @@ export interface FileRoutesById {
   '/_consumer/products/purchase-failure': typeof ConsumerProductsPurchaseFailureRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
   '/admin/products/new': typeof AdminProductsNewRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
   '/api/webhooks/payment': typeof ApiWebhooksPaymentRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
@@ -270,6 +279,7 @@ export interface FileRouteTypes {
     | '/products/purchase-failure'
     | '/admin/courses/new'
     | '/admin/products/new'
+    | '/api/auth/$'
     | '/api/webhooks/clerk'
     | '/api/webhooks/payment'
     | '/admin/courses/'
@@ -295,6 +305,7 @@ export interface FileRouteTypes {
     | '/products/purchase-failure'
     | '/admin/courses/new'
     | '/admin/products/new'
+    | '/api/auth/$'
     | '/api/webhooks/clerk'
     | '/api/webhooks/payment'
     | '/admin/courses'
@@ -323,6 +334,7 @@ export interface FileRouteTypes {
     | '/_consumer/products/purchase-failure'
     | '/admin/courses/new'
     | '/admin/products/new'
+    | '/api/auth/$'
     | '/api/webhooks/clerk'
     | '/api/webhooks/payment'
     | '/admin/courses/'
@@ -344,6 +356,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   SignInSplatRoute: typeof SignInSplatRoute
   SignUpSplatRoute: typeof SignUpSplatRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiWebhooksClerkRoute: typeof ApiWebhooksClerkRoute
   ApiWebhooksPaymentRoute: typeof ApiWebhooksPaymentRoute
   ApiPurchasesPaymentIdInvoiceRoute: typeof ApiPurchasesPaymentIdInvoiceRoute
@@ -433,6 +446,13 @@ declare module '@tanstack/react-router' {
       path: '/api/webhooks/clerk'
       fullPath: '/api/webhooks/clerk'
       preLoaderRoute: typeof ApiWebhooksClerkRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/products/new': {
@@ -635,6 +655,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   SignInSplatRoute: SignInSplatRoute,
   SignUpSplatRoute: SignUpSplatRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiWebhooksClerkRoute: ApiWebhooksClerkRoute,
   ApiWebhooksPaymentRoute: ApiWebhooksPaymentRoute,
   ApiPurchasesPaymentIdInvoiceRoute: ApiPurchasesPaymentIdInvoiceRoute,

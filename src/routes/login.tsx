@@ -1,15 +1,9 @@
-// import { SignIn } from "@clerk/tanstack-react-start";
-// import { createFileRoute } from "@tanstack/react-router";
-
-// export const Route = createFileRoute("/sign-in/$")({
-// 	component: () => (
-// 		<div className="container my-6 flex justify-center">
-// 			<SignIn />
-// 		</div>
-// 	),
-// });
-
-import { createFileRoute } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,7 +18,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { toast } from "sonner";
 
 const loginSchema = z.object({
@@ -32,11 +33,12 @@ const loginSchema = z.object({
   password: z.string().min(8),
 });
 
-export const Route = createFileRoute("/sign-in/$")({
+export const Route = createFileRoute("/login")({
   component: LoginComponent,
 });
 
 function LoginComponent() {
+  const navigate = useNavigate();
   const search = Route.useSearch() as { redirect?: string };
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -70,6 +72,9 @@ function LoginComponent() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>
+            Enter your email and password to access your account.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -92,7 +97,16 @@ function LoginComponent() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Password</FormLabel>
+                      <Link
+                        to="/forgot-password"
+                        size="sm"
+                        className="text-sm text-primary hover:underline"
+                      >
+                        Forgot password?
+                      </Link>
+                    </div>
                     <FormControl>
                       <Input {...field} type="password" />
                     </FormControl>
@@ -110,6 +124,14 @@ function LoginComponent() {
             </form>
           </Form>
         </CardContent>
+        <CardFooter className="justify-center">
+          <p className="text-sm text-muted-foreground">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-primary hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );
