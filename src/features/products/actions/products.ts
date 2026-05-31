@@ -17,7 +17,7 @@ import { eq } from "drizzle-orm";
 import { ProductTable } from "@/drizzle/schema";
 import { db } from "@/drizzle/db";
 
-export const createProductFn = createServerFn({ method: "POST" })
+const createProductFn = createServerFn({ method: "POST" })
   .inputValidator(productSchema)
   .handler(async ({ data }) => {
     try {
@@ -65,7 +65,7 @@ export const createProductFn = createServerFn({ method: "POST" })
     }
   });
 
-export const updateProductFn = createServerFn({ method: "POST" })
+const updateProductFn = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string(), values: productSchema }))
   .handler(async ({ data }) => {
     try {
@@ -100,7 +100,7 @@ export const updateProductFn = createServerFn({ method: "POST" })
     }
   });
 
-export const deleteProductFn = createServerFn({ method: "POST" })
+const deleteProductFn = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
     try {

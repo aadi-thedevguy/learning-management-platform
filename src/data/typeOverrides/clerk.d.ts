@@ -1,13 +1,13 @@
-import { type UserRole } from "@/drizzle/schema";
+import type { UserRole } from "@/drizzle/schema";
 
 declare global {
-	interface CustomJwtSessionClaims {
-		dbId?: string;
-		role?: UserRole;
-	}
+  interface CustomJwtSessionClaims {
+    dbId?: string;
+    role?: UserRole;
+  }
 
-	interface UserPublicMetadata {
-		dbId?: string;
-		role?: UserRole;
-	}
+  interface UserPublicMetadata {
+    dbId?: string;
+    role?: UserRole;
+  }
 }

@@ -4,7 +4,7 @@ import { getUserCoupon } from "@/lib/userCountryHeader";
 
 export const client = new DodoPayments({
   bearerToken: env.DODOPAYMENTS_API_KEY,
-  environment: "test_mode",
+  environment: env.NODE_ENV === "development" ? "test_mode" : "live_mode",
 });
 
 export async function getClientSessionSecret(
@@ -19,13 +19,13 @@ export async function getClientSessionSecret(
   user: { email: string; id: string; name: string },
 ) {
   const coupon = await getUserCoupon();
-  console.log("Applying coupon:", coupon);
 
   const payment = await client.checkoutSessions.create({
     customer: { name: user.name, email: user.email },
     product_cart: [{ product_id: product.dodoProductId, quantity: 1 }],
     discount_code: coupon?.couponId,
-    return_url: env.VITE_SERVER_URL,
+    billing_currency: "USD",
+    return_url: `${env.VITE_SERVER_URL}/purchase/after`,
     metadata: {
       productId: product.id,
       userId: user.id,
