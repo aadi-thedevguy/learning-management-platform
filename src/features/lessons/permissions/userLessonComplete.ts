@@ -13,13 +13,13 @@ import { getLessonIdTag } from "../db/cache/lessons";
 import { wherePublicLessons } from "./lessons";
 
 export async function canUpdateUserLessonCompleteStatus(
-  user: { userId: string | undefined },
+  userId: string | undefined,
   lessonId: string,
 ) {
   cacheTag(getLessonIdTag(lessonId));
-  if (user.userId == null) return false;
+  if (!userId) return false;
 
-  cacheTag(getUserCourseAccessUserTag(user.userId));
+  cacheTag(getUserCourseAccessUserTag(userId));
 
   const [courseAccess] = await db
     .select({ courseId: CourseTable.id })
@@ -39,7 +39,7 @@ export async function canUpdateUserLessonCompleteStatus(
     .where(
       and(
         eq(LessonTable.id, lessonId),
-        eq(UserCourseAccessTable.userId, user.userId),
+        eq(UserCourseAccessTable.userId, userId),
       ),
     )
     .limit(1);

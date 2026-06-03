@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { and, eq } from "drizzle-orm";
 import { db } from "@/drizzle/db";
 import { ProductTable } from "@/drizzle/schema";
@@ -13,6 +13,9 @@ export const Route = createFileRoute("/_consumer/products/$productId/purchase")(
       handlers: {
         POST: async ({ params }) => {
           const { user } = await getCurrentUser({ allData: true });
+          if (!user) {
+            return redirect({ to: "/sign-in/$" });
+          }
           const product = await db.query.ProductTable.findFirst({
             columns: {
               name: true,
@@ -30,20 +33,10 @@ export const Route = createFileRoute("/_consumer/products/$productId/purchase")(
           if (!product)
             return new Response("Product not found", { status: 404 });
 
-          if (user == null) {
-            return new Response(null, {
-              status: 302,
-              headers: { Location: `/sign-in` },
-            });
-          }
-
           if (
             await userOwnsProduct({ userId: user.id, productId: product.id })
           ) {
-            return new Response(null, {
-              status: 302,
-              headers: { Location: "/courses" },
-            });
+            return redirect({ to: "/courses" });
           }
           try {
             const paymentLink = await getClientSessionSecret(product, user);

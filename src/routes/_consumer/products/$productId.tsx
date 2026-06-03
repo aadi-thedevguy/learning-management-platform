@@ -202,9 +202,11 @@ function ProductPage() {
                           <VideoIcon className="size-4" />
                           {lesson.status === "preview" ? (
                             <Link
-                              to="/courses/$courseId/lessons/$lessonId"
+                              to="/courses/$courseId"
                               params={{
                                 courseId: course.id,
+                              }}
+                              search={{
                                 lessonId: lesson.id,
                               }}
                               className="underline text-accent"

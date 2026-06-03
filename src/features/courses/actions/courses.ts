@@ -8,6 +8,16 @@ import {
   canUpdateCourses,
 } from "../permissions/courses";
 import { courseSchema } from "../schemas/courses";
+import { db } from "@/drizzle/db";
+import { asc, eq } from "drizzle-orm";
+import {
+  CourseSectionTable,
+  CourseTable,
+  LessonTable,
+  UserLessonCompleteTable,
+} from "@/drizzle/schema";
+import { wherePublicCourseSections } from "@/features/courseSections/permissions/sections";
+import { wherePublicLessons } from "@/features/lessons/permissions/lessons";
 
 const createCourseFn = createServerFn({ method: "POST" })
   .inputValidator(courseSchema)
@@ -110,6 +120,56 @@ const deleteCourseFn = createServerFn({ method: "POST" })
         message: "Failed to delete course",
       };
     }
+  });
+
+export const getCourseLayoutData = createServerFn()
+  .inputValidator(z.object({ courseId: z.string() }))
+  .handler(async ({ data: { courseId } }) => {
+    const { userId } = await getCurrentUser();
+
+    const course = await db.query.CourseTable.findFirst({
+      where: eq(CourseTable.id, courseId),
+      columns: { id: true, name: true },
+      with: {
+        courseSections: {
+          orderBy: asc(CourseSectionTable.order),
+          where: wherePublicCourseSections,
+          columns: { id: true, name: true },
+          with: {
+            lessons: {
+              orderBy: asc(LessonTable.order),
+              where: wherePublicLessons,
+              columns: { id: true, name: true },
+            },
+          },
+        },
+      },
+    });
+
+    if (!course) throw new Error("Course not found");
+
+    const completedLessonIds =
+      userId == null
+        ? []
+        : (
+            await db.query.UserLessonCompleteTable.findMany({
+              columns: { lessonId: true },
+              where: eq(UserLessonCompleteTable.userId, userId),
+            })
+          ).map((d) => d.lessonId);
+
+    return {
+      course: {
+        ...course,
+        courseSections: course.courseSections.map((section) => ({
+          ...section,
+          lessons: section.lessons.map((lesson) => ({
+            ...lesson,
+            isComplete: completedLessonIds.includes(lesson.id),
+          })),
+        })),
+      },
+    };
   });
 
 export function createCourse(unsafeData: z.infer<typeof courseSchema>) {
