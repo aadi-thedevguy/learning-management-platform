@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { YouTubeVideoPlayer } from "@/features/lessons/components/YouTubeVideoPlayer";
+import { VideoPlayer } from "@/features/lessons/components/YouTubeVideoPlayer";
 import { getCourseLayoutData } from "@/features/courses/actions/courses";
 import { z } from "zod";
 
@@ -47,7 +47,10 @@ function CourseLessonPage() {
 	return (
 		<div className="flex flex-col gap-6">
 			<div className="aspect-video overflow-hidden rounded-lg bg-black">
-				<YouTubeVideoPlayer videoId={selectedLesson.youtubeVideoId} />
+				<VideoPlayer
+					videoUrl={selectedLesson.videoUrl}
+					youtubeVideoId={selectedLesson.youtubeVideoId}
+				/>
 			</div>
 			<div className="flex flex-col gap-2">
 				<h1 className="text-2xl font-semibold">{selectedLesson.name}</h1>

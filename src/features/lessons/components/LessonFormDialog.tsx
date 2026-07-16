@@ -21,7 +21,8 @@ export function LessonFormDialog({
 		id: string;
 		name: string;
 		status: LessonStatus;
-		youtubeVideoId: string;
+		youtubeVideoId: string | null;
+		videoUrl: string | null;
 		description: string | null;
 		sectionId: string;
 	};

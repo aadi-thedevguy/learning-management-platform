@@ -83,6 +83,7 @@ export const getLesson = createServerFn()
 					columns: {
 						id: true,
 						youtubeVideoId: true,
+						videoUrl: true,
 						name: true,
 						description: true,
 						status: true,

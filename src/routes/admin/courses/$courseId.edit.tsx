@@ -37,6 +37,7 @@ export const getCourse = createServerFn()
 								status: true,
 								description: true,
 								youtubeVideoId: true,
+								videoUrl: true,
 								sectionId: true,
 							},
 						},

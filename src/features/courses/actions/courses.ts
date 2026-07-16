@@ -161,6 +161,7 @@ export const getCourseLayoutData = createServerFn()
 										name: true,
 										description: true,
 										youtubeVideoId: true,
+										videoUrl: true,
 									},
 								},
 							},
