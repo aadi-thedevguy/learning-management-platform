@@ -7,6 +7,25 @@ import {
 } from "@/drizzle/schema";
 import { revalidateUserCourseAccessCache } from "./cache/userCourseAccess";
 
+export async function userHasCourseAccess(
+	{
+		userId,
+		courseId,
+	}: {
+		userId: string;
+		courseId: string;
+	},
+	trx: Omit<typeof db, "$client"> = db,
+) {
+	const access = await trx.query.UserCourseAccessTable.findFirst({
+		where: and(
+			eq(UserCourseAccessTable.userId, userId),
+			eq(UserCourseAccessTable.courseId, courseId),
+		),
+	});
+	return access != null;
+}
+
 export async function addUserCourseAccess(
 	{
 		userId,
