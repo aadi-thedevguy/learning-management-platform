@@ -23,48 +23,59 @@ import { wherePublicCourseSections } from "@/features/courseSections/permissions
 import { wherePublicLessons } from "@/features/lessons/permissions/lessons";
 import { formatPlural } from "@/lib/formatters";
 import { getCurrentUser } from "@/services/clerk";
+import { getCached } from "@/lib/cache";
+import { getUserCourseAccessUserTag } from "@/features/courses/db/cache/userCourseAccess";
+import { getCourseGlobalTag } from "@/features/courses/db/cache/courses";
 
 export const getUserCourses = createServerFn().handler(async () => {
 	const { userId } = await getCurrentUser();
 	if (!userId) throw redirect({ href: "/sign-in" });
 
-	return db
-		.select({
-			id: CourseTable.id,
-			name: CourseTable.name,
-			description: CourseTable.description,
-			sectionsCount: countDistinct(CourseSectionTable.id),
-			lessonsCount: countDistinct(LessonTable.id),
-			lessonsComplete: countDistinct(UserLessonCompleteTable.lessonId),
-		})
-		.from(CourseTable)
-		.innerJoin(
-			UserCourseAccessTable,
-			and(
-				eq(UserCourseAccessTable.courseId, CourseTable.id),
-				eq(UserCourseAccessTable.userId, userId),
-			),
-		)
-		.leftJoin(
-			CourseSectionTable,
-			and(
-				eq(CourseSectionTable.courseId, CourseTable.id),
-				wherePublicCourseSections,
-			),
-		)
-		.leftJoin(
-			LessonTable,
-			and(eq(LessonTable.sectionId, CourseSectionTable.id), wherePublicLessons),
-		)
-		.leftJoin(
-			UserLessonCompleteTable,
-			and(
-				eq(UserLessonCompleteTable.lessonId, LessonTable.id),
-				eq(UserLessonCompleteTable.userId, userId),
-			),
-		)
-		.orderBy(CourseTable.name)
-		.groupBy(CourseTable.id);
+	return getCached(
+		`user-courses:${userId}`,
+		[getUserCourseAccessUserTag(userId), getCourseGlobalTag()],
+		async () =>
+			db
+				.select({
+					id: CourseTable.id,
+					name: CourseTable.name,
+					description: CourseTable.description,
+					sectionsCount: countDistinct(CourseSectionTable.id),
+					lessonsCount: countDistinct(LessonTable.id),
+					lessonsComplete: countDistinct(UserLessonCompleteTable.lessonId),
+				})
+				.from(CourseTable)
+				.innerJoin(
+					UserCourseAccessTable,
+					and(
+						eq(UserCourseAccessTable.courseId, CourseTable.id),
+						eq(UserCourseAccessTable.userId, userId),
+					),
+				)
+				.leftJoin(
+					CourseSectionTable,
+					and(
+						eq(CourseSectionTable.courseId, CourseTable.id),
+						wherePublicCourseSections,
+					),
+				)
+				.leftJoin(
+					LessonTable,
+					and(
+						eq(LessonTable.sectionId, CourseSectionTable.id),
+						wherePublicLessons,
+					),
+				)
+				.leftJoin(
+					UserLessonCompleteTable,
+					and(
+						eq(UserLessonCompleteTable.lessonId, LessonTable.id),
+						eq(UserLessonCompleteTable.userId, userId),
+					),
+				)
+				.orderBy(CourseTable.name)
+				.groupBy(CourseTable.id),
+	);
 });
 
 export const Route = createFileRoute("/_consumer/_authed/courses/")({

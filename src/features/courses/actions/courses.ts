@@ -20,6 +20,9 @@ import {
 import { wherePublicCourseSections } from "@/features/courseSections/permissions/sections";
 import { wherePublicLessons } from "@/features/lessons/permissions/lessons";
 import { userHasCourseAccess } from "../db/userCourseAcccess";
+import { getCached } from "@/lib/cache";
+import { getCourseGlobalTag, getCourseIdTag } from "../db/cache/courses";
+import { getUserCourseAccessUserTag } from "../db/cache/userCourseAccess";
 
 const createCourseFn = createServerFn({ method: "POST" })
 	.inputValidator(courseSchema)
@@ -130,57 +133,67 @@ export const getCourseLayoutData = createServerFn()
 		const { userId } = await getCurrentUser();
 		if (!userId) throw redirect({ href: "/sign-in" });
 
-		const hasAccess = await userHasCourseAccess({ userId, courseId });
-		if (!hasAccess) throw redirect({ href: "/courses" });
+		return getCached(
+			`course-layout:${courseId}:${userId}`,
+			[
+				getCourseIdTag(courseId),
+				getCourseGlobalTag(),
+				getUserCourseAccessUserTag(userId),
+			],
+			async () => {
+				const hasAccess = await userHasCourseAccess({ userId, courseId });
+				if (!hasAccess) throw redirect({ href: "/courses" });
 
-		const course = await db.query.CourseTable.findFirst({
-			where: eq(CourseTable.id, courseId),
-			columns: { id: true, name: true },
-			with: {
-				courseSections: {
-					orderBy: asc(CourseSectionTable.order),
-					where: wherePublicCourseSections,
+				const course = await db.query.CourseTable.findFirst({
+					where: eq(CourseTable.id, courseId),
 					columns: { id: true, name: true },
 					with: {
-						lessons: {
-							orderBy: asc(LessonTable.order),
-							where: wherePublicLessons,
-							columns: {
-								id: true,
-								name: true,
-								description: true,
-								youtubeVideoId: true,
+						courseSections: {
+							orderBy: asc(CourseSectionTable.order),
+							where: wherePublicCourseSections,
+							columns: { id: true, name: true },
+							with: {
+								lessons: {
+									orderBy: asc(LessonTable.order),
+									where: wherePublicLessons,
+									columns: {
+										id: true,
+										name: true,
+										description: true,
+										youtubeVideoId: true,
+									},
+								},
 							},
 						},
 					},
-				},
+				});
+
+				if (!course) throw new Error("Course not found");
+
+				const completedLessonIds =
+					userId == null
+						? []
+						: (
+								await db.query.UserLessonCompleteTable.findMany({
+									columns: { lessonId: true },
+									where: eq(UserLessonCompleteTable.userId, userId),
+								})
+							).map((d) => d.lessonId);
+
+				return {
+					course: {
+						...course,
+						courseSections: course.courseSections.map((section) => ({
+							...section,
+							lessons: section.lessons.map((lesson) => ({
+								...lesson,
+								isComplete: completedLessonIds.includes(lesson.id),
+							})),
+						})),
+					},
+				};
 			},
-		});
-
-		if (!course) throw new Error("Course not found");
-
-		const completedLessonIds =
-			userId == null
-				? []
-				: (
-						await db.query.UserLessonCompleteTable.findMany({
-							columns: { lessonId: true },
-							where: eq(UserLessonCompleteTable.userId, userId),
-						})
-					).map((d) => d.lessonId);
-
-		return {
-			course: {
-				...course,
-				courseSections: course.courseSections.map((section) => ({
-					...section,
-					lessons: section.lessons.map((lesson) => ({
-						...lesson,
-						isComplete: completedLessonIds.includes(lesson.id),
-					})),
-				})),
-			},
-		};
+		);
 	});
 
 export function createCourse(unsafeData: z.infer<typeof courseSchema>) {

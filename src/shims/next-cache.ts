@@ -1,1 +1,1 @@
-export function revalidateTag(_tag: string) {}
+export { revalidateTag, revalidateTags } from "@/lib/cache";
