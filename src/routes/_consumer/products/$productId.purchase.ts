@@ -8,51 +8,56 @@ import { getCurrentUser } from "@/services/clerk";
 import { getClientSessionSecret } from "@/services/payment";
 
 export const Route = createFileRoute("/_consumer/products/$productId/purchase")(
-  {
-    server: {
-      handlers: {
-        POST: async ({ params }) => {
-          const { user } = await getCurrentUser({ allData: true });
-          if (!user) {
-            return redirect({ to: "/sign-in/$" });
-          }
-          const product = await db.query.ProductTable.findFirst({
-            columns: {
-              name: true,
-              id: true,
-              imageUrl: true,
-              description: true,
-              priceInDollars: true,
-              dodoProductId: true,
-            },
-            where: and(
-              eq(ProductTable.id, params.productId),
-              wherePublicProducts,
-            ),
-          });
-          if (!product)
-            return new Response("Product not found", { status: 404 });
+	{
+		server: {
+			handlers: {
+				POST: async ({ params }) => {
+					const { user } = await getCurrentUser({ allData: true });
+					if (!user) {
+						return redirect({
+							to: "/sign-in/$",
+							search: {
+								redirect_url: `/products/${params.productId}/purchase`,
+							},
+						});
+					}
+					const product = await db.query.ProductTable.findFirst({
+						columns: {
+							name: true,
+							id: true,
+							imageUrl: true,
+							description: true,
+							priceInDollars: true,
+							dodoProductId: true,
+						},
+						where: and(
+							eq(ProductTable.id, params.productId),
+							wherePublicProducts,
+						),
+					});
+					if (!product)
+						return new Response("Product not found", { status: 404 });
 
-          if (
-            await userOwnsProduct({ userId: user.id, productId: product.id })
-          ) {
-            return redirect({ to: "/courses" });
-          }
-          try {
-            const paymentLink = await getClientSessionSecret(product, user);
-            return new Response(null, {
-              status: 302,
-              headers: { Location: paymentLink },
-            });
-          } catch (error) {
-            console.error("Failed to generate payment link:", error);
-            if (error instanceof Error) {
-              return new Response(error.message, { status: 500 });
-            }
-            return new Response("Internal Server Error", { status: 500 });
-          }
-        },
-      },
-    },
-  },
+					if (
+						await userOwnsProduct({ userId: user.id, productId: product.id })
+					) {
+						return redirect({ to: "/courses" });
+					}
+					try {
+						const paymentLink = await getClientSessionSecret(product, user);
+						return new Response(null, {
+							status: 302,
+							headers: { Location: paymentLink },
+						});
+					} catch (error) {
+						console.error("Failed to generate payment link:", error);
+						if (error instanceof Error) {
+							return new Response(error.message, { status: 500 });
+						}
+						return new Response("Internal Server Error", { status: 500 });
+					}
+				},
+			},
+		},
+	},
 );
