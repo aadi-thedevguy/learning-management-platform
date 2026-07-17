@@ -15,7 +15,6 @@ export const env = createEnv({
     S3_BUCKET_NAME: z.string().min(1),
     CLOUDFRONT_DOMAIN: z.string().min(1),
     SES_FROM_EMAIL: z.string().min(1),
-    REDIS_URL: z.string().min(1).optional(),
     DODOPAYMENTS_API_KEY: z.string().min(1),
     DODOPAYMENTS_WEBHOOK_SECRET: z.string().min(1),
     PPP_50_COUPON_ID: z.string().min(1),

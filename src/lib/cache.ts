@@ -1,14 +1,10 @@
-import Redis from "ioredis";
-import { env } from "@/env";
+interface CacheEntry {
+	value: string;
+	expiresAt: number;
+}
 
-const redisUrl = env.REDIS_URL ?? "redis://localhost:6379";
-
-export const redis = new Redis(redisUrl, {
-	maxRetriesPerRequest: 3,
-	enableReadyCheck: false,
-});
-
-const TAG_KEYS_PREFIX = "cache:tag:";
+const cache = new Map<string, CacheEntry>();
+const tagToKeys = new Map<string, Set<string>>();
 
 export async function getCached<T>(
 	key: string,
@@ -16,48 +12,74 @@ export async function getCached<T>(
 	fn: () => Promise<T>,
 	ttlSeconds = 3600,
 ): Promise<T> {
-	try {
-		const cached = await redis.get(key);
-		if (cached != null) {
-			return JSON.parse(cached) as T;
+	const now = Date.now();
+	const cached = cache.get(key);
+
+	if (cached != null) {
+		if (cached.expiresAt > now) {
+			return JSON.parse(cached.value) as T;
 		}
-	} catch {
-		// Ignore Redis errors; fall through to recompute
+		// Expired entry; remove it and its tag mappings lazily
+		cache.delete(key);
+		for (const tag of tags) {
+			tagToKeys.get(tag)?.delete(key);
+		}
 	}
 
 	const value = await fn();
 
-	try {
-		const pipeline = redis.pipeline();
-		pipeline.set(key, JSON.stringify(value), "EX", ttlSeconds);
-		for (const tag of tags) {
-			pipeline.sadd(`${TAG_KEYS_PREFIX}${tag}`, key);
-			pipeline.expire(`${TAG_KEYS_PREFIX}${tag}`, ttlSeconds);
+	const entry: CacheEntry = {
+		value: JSON.stringify(value),
+		expiresAt: now + ttlSeconds * 1000,
+	};
+	cache.set(key, entry);
+
+	for (const tag of tags) {
+		let keys = tagToKeys.get(tag);
+		if (keys == null) {
+			keys = new Set<string>();
+			tagToKeys.set(tag, keys);
 		}
-		await pipeline.exec();
-	} catch {
-		// Ignore Redis errors
+		keys.add(key);
 	}
 
 	return value;
 }
 
 export async function revalidateTag(tag: string) {
-	try {
-		const keys = await redis.smembers(`${TAG_KEYS_PREFIX}${tag}`);
-		if (keys.length === 0) return;
+	const keys = tagToKeys.get(tag);
+	if (keys == null || keys.size === 0) return;
 
-		const pipeline = redis.pipeline();
-		for (const key of keys) {
-			pipeline.del(key);
-		}
-		pipeline.del(`${TAG_KEYS_PREFIX}${tag}`);
-		await pipeline.exec();
-	} catch {
-		// Ignore Redis errors
+	for (const key of keys) {
+		cache.delete(key);
 	}
+	tagToKeys.delete(tag);
 }
 
 export async function revalidateTags(tags: string[]) {
 	await Promise.all(tags.map((tag) => revalidateTag(tag)));
+}
+
+/**
+ * Remove all expired entries and clean up empty tag mappings.
+ * Safe to call periodically; ignored errors won't affect requests.
+ */
+export function cleanupExpiredCache() {
+	const now = Date.now();
+	for (const [key, entry] of cache) {
+		if (entry.expiresAt <= now) {
+			cache.delete(key);
+		}
+	}
+
+	for (const [tag, keys] of tagToKeys) {
+		for (const key of keys) {
+			if (!cache.has(key)) {
+				keys.delete(key);
+			}
+		}
+		if (keys.size === 0) {
+			tagToKeys.delete(tag);
+		}
+	}
 }
