@@ -33,7 +33,7 @@ import { VideoIcon } from "lucide-react";
 import { wherePublicCourseSections } from "@/features/courseSections/permissions/sections";
 import { wherePublicLessons } from "@/features/lessons/permissions/lessons";
 import { userOwnsProduct } from "@/features/products/db/products";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 import { getUserCoupon } from "@/lib/userCountryHeader";
 
 import { getCached } from "@/lib/cache";

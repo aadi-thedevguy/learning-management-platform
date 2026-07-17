@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { redirect } from "@tanstack/react-router";
 import { z } from "zod";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 import { deleteCourseDb, insertCourse, updateCourseDb } from "../db/courses";
 import {
 	canCreateCourses,
@@ -131,7 +131,7 @@ export const getCourseLayoutData = createServerFn()
 	.inputValidator(z.object({ courseId: z.string() }))
 	.handler(async ({ data: { courseId } }) => {
 		const { userId } = await getCurrentUser();
-		if (!userId) throw redirect({ href: "/sign-in" });
+		if (!userId) throw redirect({ href: "/login" });
 
 		return getCached(
 			`course-layout:${courseId}:${userId}`,

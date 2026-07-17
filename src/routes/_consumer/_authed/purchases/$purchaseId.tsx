@@ -18,7 +18,7 @@ import { db } from "@/drizzle/db";
 import { PurchaseTable } from "@/drizzle/schema";
 import { formatDate, formatPrice } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 import { Button } from "@/components/ui/button";
 import { client as dodoClient } from "@/services/payment";
 import type { DodoPayments } from "dodopayments";
@@ -28,7 +28,7 @@ export const getPurchase = createServerFn()
   .inputValidator(z.object({ purchaseId: z.string() }))
   .handler(async ({ data }) => {
     const { userId, user } = await getCurrentUser({ allData: true });
-    if (userId == null || user == null) throw redirect({ href: "/sign-in" });
+    if (userId == null || user == null) throw redirect({ href: "/login" });
 
     const purchase = await db.query.PurchaseTable.findFirst({
       columns: {

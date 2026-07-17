@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/drizzle/db";
 import { PurchaseTable } from "@/drizzle/schema";
 import { UserPurchaseTable } from "@/features/purchases/components/UserPurchaseTable";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 
 export const getPurchases = createServerFn().handler(async () => {
   const { userId } = await getCurrentUser();
-  if (!userId) throw redirect({ to: "/sign-in/$" });
+  if (!userId) throw redirect({ to: "/login" });
 
   return db.query.PurchaseTable.findMany({
     columns: {

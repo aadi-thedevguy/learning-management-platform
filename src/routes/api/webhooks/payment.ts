@@ -7,7 +7,7 @@ import { ProductTable } from "@/drizzle/schema";
 import { env } from "@/env";
 import { addUserCourseAccess } from "@/features/courses/db/userCourseAcccess";
 import { insertPurchase } from "@/features/purchases/db/purchases";
-import { getUser } from "@/services/clerk";
+import { getUser } from "@/services/auth";
 import { sendPurchaseConfirmationEmail } from "@/services/email";
 
 export const Route = createFileRoute("/api/webhooks/payment")({

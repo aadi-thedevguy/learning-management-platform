@@ -1,8 +1,8 @@
-import { Show, SignInButton, UserButton } from "@clerk/tanstack-react-start";
-import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
-import { HomeIcon } from "lucide-react";
+import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { HomeIcon, LogOut } from "lucide-react";
 import { HasPermission } from "@/components/HasPermission";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 import { canAccessAdminPages } from "@/permissions/general";
 
 export const Route = createFileRoute("/_consumer")({
@@ -10,6 +10,9 @@ export const Route = createFileRoute("/_consumer")({
 });
 
 function ConsumerLayout() {
+	const { data: session, isPending } = authClient.useSession();
+	const isSignedIn = !!session?.user;
+
 	return (
 		<>
 			<header className="flex w-full h-12 shadow bg-background z-10">
@@ -26,42 +29,35 @@ function ConsumerLayout() {
 					>
 						<HomeIcon />
 					</Link>
-					<Show when="signed-in">
-						<HasPermission permission={canAccessAdminPages}>
+					{isPending ? null : isSignedIn ? (
+						<>
+							<HasPermission permission={canAccessAdminPages}>
+								<Link
+									className="hover:bg-accent/10 flex items-center px-2"
+									to="/admin"
+								>
+									Admin
+								</Link>
+							</HasPermission>
 							<Link
 								className="hover:bg-accent/10 flex items-center px-2"
-								to="/admin"
+								to="/courses"
 							>
-								Admin
+								My Courses
 							</Link>
-						</HasPermission>
-						<Link
-							className="hover:bg-accent/10 flex items-center px-2"
-							to="/courses"
-						>
-							My Courses
-						</Link>
-						<Link
-							className="hover:bg-accent/10 flex items-center px-2"
-							to="/purchases"
-						>
-							Purchase History
-						</Link>
-						<div className="size-8 self-center">
-							<UserButton
-								appearance={{
-									elements: {
-										userButtonAvatarBox: { width: "100%", height: "100%" },
-									},
-								}}
-							/>
-						</div>
-					</Show>
-					<Show when="signed-out">
+							<Link
+								className="hover:bg-accent/10 flex items-center px-2"
+								to="/purchases"
+							>
+								Purchase History
+							</Link>
+							<SignOutButton />
+						</>
+					) : (
 						<Button className="self-center" asChild>
-							<SignInButton>Sign In</SignInButton>
+							<Link to="/login">Sign In</Link>
 						</Button>
-					</Show>
+					)}
 				</nav>
 			</header>
 			<main className="container my-6 px-4 mx-auto">
@@ -70,3 +66,23 @@ function ConsumerLayout() {
 		</>
 	);
 }
+
+function SignOutButton() {
+	const navigate = useNavigate();
+
+	return (
+		<Button
+			variant="ghost"
+			size="icon"
+			className="self-center"
+			onClick={async () => {
+				await authClient.signOut();
+				navigate({ to: "/" });
+			}}
+		>
+			<LogOut className="h-4 w-4" />
+		</Button>
+	);
+}
+
+

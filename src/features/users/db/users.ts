@@ -9,7 +9,7 @@ export async function upsertUser(data: typeof UserTable.$inferInsert) {
 		.values(data)
 		.returning()
 		.onConflictDoUpdate({
-			target: [UserTable.clerkUserId],
+			target: [UserTable.authUserId],
 			set: data,
 			where: isNull(UserTable.deletedAt),
 		});
@@ -21,11 +21,11 @@ export async function upsertUser(data: typeof UserTable.$inferInsert) {
 	return user;
 }
 
-export async function deleteUser({ clerkUserId }: { clerkUserId: string }) {
+export async function deleteUser({ authUserId }: { authUserId: string }) {
 	const [deletedUser] = await db
 		.insert(UserTable)
 		.values({
-			clerkUserId,
+			authUserId,
 			email: "redacted@deleted.com",
 			name: "Deleted User",
 			imageUrl: null,
@@ -33,7 +33,7 @@ export async function deleteUser({ clerkUserId }: { clerkUserId: string }) {
 			role: "user",
 		})
 		.onConflictDoUpdate({
-			target: [UserTable.clerkUserId],
+			target: [UserTable.authUserId],
 			set: {
 				deletedAt: new Date(),
 				email: "redacted@deleted.com",

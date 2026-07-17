@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 import { updateLessonCompleteStatus as updateLessonCompleteStatusDb } from "../db/userLessonComplete";
 import { canUpdateUserLessonCompleteStatus } from "../permissions/userLessonComplete";
 import { and, asc, desc, eq, gt, lt } from "drizzle-orm";

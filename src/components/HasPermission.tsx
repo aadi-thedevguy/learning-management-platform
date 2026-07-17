@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/tanstack-react-start";
+import { authClient } from "@/lib/auth-client";
 import type { ReactNode } from "react";
 import type { UserRole } from "@/drizzle/schema";
 
@@ -9,8 +9,8 @@ export function HasPermission({
 	permission: (user: { role: UserRole | undefined }) => boolean;
 	children: ReactNode;
 }) {
-	const { user } = useUser();
-	const role = user?.publicMetadata?.role as UserRole | undefined;
+	const { data: session } = authClient.useSession();
+	const role = session?.user?.role as UserRole | undefined;
 
 	if (permission({ role })) {
 		return <>{children}</>;

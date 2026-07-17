@@ -1,12 +1,14 @@
-import { UserButton } from "@clerk/tanstack-react-start";
 import {
 	createFileRoute,
 	Link,
 	Outlet,
 	notFound,
+	useNavigate,
 } from "@tanstack/react-router";
-import { Home } from "lucide-react";
+import { Home, LogOut } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/admin")({
 	beforeLoad: ({ context }) => {
@@ -59,16 +61,26 @@ function Navbar() {
 				>
 					Sales
 				</Link>
-				<div className="size-8 self-center">
-					<UserButton
-						appearance={{
-							elements: {
-								userButtonAvatarBox: { width: "100%", height: "100%" },
-							},
-						}}
-					/>
-				</div>
+				<SignOutButton />
 			</nav>
 		</header>
+	);
+}
+
+function SignOutButton() {
+	const navigate = useNavigate();
+
+	return (
+		<Button
+			variant="ghost"
+			size="icon"
+			className="self-center"
+			onClick={async () => {
+				await authClient.signOut();
+				navigate({ to: "/" });
+			}}
+		>
+			<LogOut className="h-4 w-4" />
+		</Button>
 	);
 }

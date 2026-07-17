@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/drizzle/db";
 import { PurchaseTable } from "@/drizzle/schema";
 import { revokeUserCourseAccess } from "@/features/courses/db/userCourseAcccess";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 import { client as dodoClient } from "@/services/payment";
 import { updatePurchase } from "../db/purchases";
 import { canRefundPurchases } from "../permissions/products";

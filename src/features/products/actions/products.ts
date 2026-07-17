@@ -5,7 +5,7 @@ import {
   insertProduct,
   updateProduct as updateProductDb,
 } from "@/features/products/db/products";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 import {
   canCreateProducts,
   canDeleteProducts,

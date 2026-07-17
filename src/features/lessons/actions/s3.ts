@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 import { getVideoUploadPresignedUrl } from "@/services/s3";
 
 export const getVideoUploadUrl = createServerFn({ method: "POST" })

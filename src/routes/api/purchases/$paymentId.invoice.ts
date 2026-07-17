@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { client } from "@/services/payment";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 import { db } from "@/drizzle/db";
 import { and, eq } from "drizzle-orm/sql/expressions/conditions";
 import { PurchaseTable } from "@/drizzle/schema";

@@ -22,14 +22,14 @@ import {
 import { wherePublicCourseSections } from "@/features/courseSections/permissions/sections";
 import { wherePublicLessons } from "@/features/lessons/permissions/lessons";
 import { formatPlural } from "@/lib/formatters";
-import { getCurrentUser } from "@/services/clerk";
+import { getCurrentUser } from "@/services/auth";
 import { getCached } from "@/lib/cache";
 import { getUserCourseAccessUserTag } from "@/features/courses/db/cache/userCourseAccess";
 import { getCourseGlobalTag } from "@/features/courses/db/cache/courses";
 
 export const getUserCourses = createServerFn().handler(async () => {
 	const { userId } = await getCurrentUser();
-	if (!userId) throw redirect({ href: "/sign-in" });
+	if (!userId) throw redirect({ href: "/login" });
 
 	return getCached(
 		`user-courses:${userId}`,

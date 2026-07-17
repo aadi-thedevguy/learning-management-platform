@@ -9,18 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ConsumerRouteImport } from './routes/_consumer'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as ConsumerIndexRouteImport } from './routes/_consumer/index'
-import { Route as SignUpSplatRouteImport } from './routes/sign-up.$'
-import { Route as SignInSplatRouteImport } from './routes/sign-in.$'
 import { Route as AdminSalesRouteImport } from './routes/admin/sales'
 import { Route as ConsumerAuthedRouteImport } from './routes/_consumer/_authed'
 import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/index'
 import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
 import { Route as ApiWebhooksPaymentRouteImport } from './routes/api/webhooks/payment'
-import { Route as ApiWebhooksClerkRouteImport } from './routes/api/webhooks/clerk'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as AdminProductsNewRouteImport } from './routes/admin/products/new'
 import { Route as AdminCoursesNewRouteImport } from './routes/admin/courses/new'
 import { Route as ConsumerPurchaseAfterRouteImport } from './routes/_consumer/purchase.after'
@@ -35,6 +37,26 @@ import { Route as ConsumerAuthedPurchasesPurchaseIdRouteImport } from './routes/
 import { Route as ConsumerAuthedCoursesCourseIdSidebarRouteImport } from './routes/_consumer/_authed/courses/$courseId/_sidebar'
 import { Route as ConsumerAuthedCoursesCourseIdSidebarIndexRouteImport } from './routes/_consumer/_authed/courses/$courseId/_sidebar.index'
 
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -53,16 +75,6 @@ const ConsumerIndexRoute = ConsumerIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ConsumerRoute,
-} as any)
-const SignUpSplatRoute = SignUpSplatRouteImport.update({
-  id: '/sign-up/$',
-  path: '/sign-up/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SignInSplatRoute = SignInSplatRouteImport.update({
-  id: '/sign-in/$',
-  path: '/sign-in/$',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminSalesRoute = AdminSalesRouteImport.update({
   id: '/sales',
@@ -88,9 +100,9 @@ const ApiWebhooksPaymentRoute = ApiWebhooksPaymentRouteImport.update({
   path: '/api/webhooks/payment',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiWebhooksClerkRoute = ApiWebhooksClerkRouteImport.update({
-  id: '/api/webhooks/clerk',
-  path: '/api/webhooks/clerk',
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminProductsNewRoute = AdminProductsNewRouteImport.update({
@@ -172,15 +184,17 @@ const ConsumerAuthedCoursesCourseIdSidebarIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof ConsumerIndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
   '/admin/sales': typeof AdminSalesRoute
-  '/sign-in/$': typeof SignInSplatRoute
-  '/sign-up/$': typeof SignUpSplatRoute
   '/admin/': typeof AdminIndexRoute
   '/products/$productId': typeof ConsumerProductsProductIdRouteWithChildren
   '/purchase/after': typeof ConsumerPurchaseAfterRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
   '/admin/products/new': typeof AdminProductsNewRoute
-  '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/payment': typeof ApiWebhooksPaymentRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
@@ -195,16 +209,18 @@ export interface FileRoutesByFullPath {
   '/courses/$courseId/': typeof ConsumerAuthedCoursesCourseIdSidebarIndexRoute
 }
 export interface FileRoutesByTo {
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
   '/': typeof ConsumerIndexRoute
   '/admin/sales': typeof AdminSalesRoute
-  '/sign-in/$': typeof SignInSplatRoute
-  '/sign-up/$': typeof SignUpSplatRoute
   '/admin': typeof AdminIndexRoute
   '/products/$productId': typeof ConsumerProductsProductIdRouteWithChildren
   '/purchase/after': typeof ConsumerPurchaseAfterRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
   '/admin/products/new': typeof AdminProductsNewRoute
-  '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/payment': typeof ApiWebhooksPaymentRoute
   '/admin/courses': typeof AdminCoursesIndexRoute
   '/admin/products': typeof AdminProductsIndexRoute
@@ -221,17 +237,19 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_consumer': typeof ConsumerRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
   '/_consumer/_authed': typeof ConsumerAuthedRouteWithChildren
   '/admin/sales': typeof AdminSalesRoute
-  '/sign-in/$': typeof SignInSplatRoute
-  '/sign-up/$': typeof SignUpSplatRoute
   '/_consumer/': typeof ConsumerIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/_consumer/products/$productId': typeof ConsumerProductsProductIdRouteWithChildren
   '/_consumer/purchase/after': typeof ConsumerPurchaseAfterRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
   '/admin/products/new': typeof AdminProductsNewRoute
-  '/api/webhooks/clerk': typeof ApiWebhooksClerkRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/webhooks/payment': typeof ApiWebhooksPaymentRoute
   '/admin/courses/': typeof AdminCoursesIndexRoute
   '/admin/products/': typeof AdminProductsIndexRoute
@@ -250,15 +268,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
+    | '/signup'
     | '/admin/sales'
-    | '/sign-in/$'
-    | '/sign-up/$'
     | '/admin/'
     | '/products/$productId'
     | '/purchase/after'
     | '/admin/courses/new'
     | '/admin/products/new'
-    | '/api/webhooks/clerk'
+    | '/api/auth/$'
     | '/api/webhooks/payment'
     | '/admin/courses/'
     | '/admin/products/'
@@ -273,16 +293,18 @@ export interface FileRouteTypes {
     | '/courses/$courseId/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
+    | '/signup'
     | '/'
     | '/admin/sales'
-    | '/sign-in/$'
-    | '/sign-up/$'
     | '/admin'
     | '/products/$productId'
     | '/purchase/after'
     | '/admin/courses/new'
     | '/admin/products/new'
-    | '/api/webhooks/clerk'
+    | '/api/auth/$'
     | '/api/webhooks/payment'
     | '/admin/courses'
     | '/admin/products'
@@ -298,17 +320,19 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_consumer'
     | '/admin'
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
+    | '/signup'
     | '/_consumer/_authed'
     | '/admin/sales'
-    | '/sign-in/$'
-    | '/sign-up/$'
     | '/_consumer/'
     | '/admin/'
     | '/_consumer/products/$productId'
     | '/_consumer/purchase/after'
     | '/admin/courses/new'
     | '/admin/products/new'
-    | '/api/webhooks/clerk'
+    | '/api/auth/$'
     | '/api/webhooks/payment'
     | '/admin/courses/'
     | '/admin/products/'
@@ -326,15 +350,45 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   ConsumerRoute: typeof ConsumerRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
-  SignInSplatRoute: typeof SignInSplatRoute
-  SignUpSplatRoute: typeof SignUpSplatRoute
-  ApiWebhooksClerkRoute: typeof ApiWebhooksClerkRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SignupRoute: typeof SignupRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiWebhooksPaymentRoute: typeof ApiWebhooksPaymentRoute
   ApiPurchasesPaymentIdInvoiceRoute: typeof ApiPurchasesPaymentIdInvoiceRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -362,20 +416,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof ConsumerIndexRouteImport
       parentRoute: typeof ConsumerRoute
-    }
-    '/sign-up/$': {
-      id: '/sign-up/$'
-      path: '/sign-up/$'
-      fullPath: '/sign-up/$'
-      preLoaderRoute: typeof SignUpSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sign-in/$': {
-      id: '/sign-in/$'
-      path: '/sign-in/$'
-      fullPath: '/sign-in/$'
-      preLoaderRoute: typeof SignInSplatRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/admin/sales': {
       id: '/admin/sales'
@@ -412,11 +452,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWebhooksPaymentRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/webhooks/clerk': {
-      id: '/api/webhooks/clerk'
-      path: '/api/webhooks/clerk'
-      fullPath: '/api/webhooks/clerk'
-      preLoaderRoute: typeof ApiWebhooksClerkRouteImport
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin/products/new': {
@@ -608,9 +648,11 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   ConsumerRoute: ConsumerRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
-  SignInSplatRoute: SignInSplatRoute,
-  SignUpSplatRoute: SignUpSplatRoute,
-  ApiWebhooksClerkRoute: ApiWebhooksClerkRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SignupRoute: SignupRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiWebhooksPaymentRoute: ApiWebhooksPaymentRoute,
   ApiPurchasesPaymentIdInvoiceRoute: ApiPurchasesPaymentIdInvoiceRoute,
 }

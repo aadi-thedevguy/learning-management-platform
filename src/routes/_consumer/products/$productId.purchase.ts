@@ -4,7 +4,8 @@ import { db } from "@/drizzle/db";
 import { ProductTable } from "@/drizzle/schema";
 import { userOwnsProduct } from "@/features/products/db/products";
 import { wherePublicProducts } from "@/features/products/permissions/products";
-import { getCurrentUser } from "@/services/clerk";
+import { env } from "@/env";
+import { getCurrentUser } from "@/services/auth";
 import { getClientSessionSecret } from "@/services/payment";
 
 export const Route = createFileRoute("/_consumer/products/$productId/purchase")(
@@ -15,9 +16,9 @@ export const Route = createFileRoute("/_consumer/products/$productId/purchase")(
 					const { user } = await getCurrentUser({ allData: true });
 					if (!user) {
 						return redirect({
-							to: "/sign-in/$",
+							to: "/login",
 							search: {
-								redirect_url: `/products/${params.productId}/purchase`,
+								redirect: `${env.VITE_SERVER_URL}/products/${params.productId}/purchase`,
 							},
 						});
 					}

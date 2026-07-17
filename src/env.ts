@@ -5,10 +5,8 @@ export const env = createEnv({
   server: {
     NODE_ENV: z.enum(["development", "production"]),
     DB_URL: z.string().min(1),
-    CLERK_SECRET_KEY: z.string().min(1),
-    CLERK_WEBHOOK_SECRET: z.string().min(1),
-    CLERK_SIGN_IN_URL: z.string().min(1),
-    CLERK_SIGN_UP_URL: z.string().min(1),
+    BETTER_AUTH_SECRET: z.string().min(1),
+    BETTER_AUTH_URL: z.string().min(1),
     ARCJET_KEY: z.string().min(1),
     TEST_IP_ADDRESS: z.string().min(1).optional(),
     AWS_ACCESS_KEY_ID: z.string().min(1),
