@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { asc } from "drizzle-orm";
+import { setPublicCacheHeaders } from "@/lib/cache";
 import { db } from "@/drizzle/db";
 import { ProductTable } from "@/drizzle/schema";
 import { ProductCard } from "@/features/products/components/ProductCard";
@@ -8,7 +9,7 @@ import { wherePublicProducts } from "@/features/products/permissions/products";
 
 export const getPublicProducts = createServerFn({ method: "GET" }).handler(
   async () => {
-    return db.query.ProductTable.findMany({
+    const products = await db.query.ProductTable.findMany({
       columns: {
         id: true,
         name: true,
@@ -19,6 +20,10 @@ export const getPublicProducts = createServerFn({ method: "GET" }).handler(
       where: wherePublicProducts,
       orderBy: asc(ProductTable.name),
     });
+
+    await setPublicCacheHeaders();
+
+    return products;
   },
 );
 

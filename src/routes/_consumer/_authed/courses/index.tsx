@@ -1,5 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { setPrivateCacheHeaders } from "@/lib/cache";
 import { and, countDistinct, eq } from "drizzle-orm";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -76,6 +77,8 @@ export const getUserCourses = createServerFn().handler(async () => {
 				.orderBy(CourseTable.name)
 				.groupBy(CourseTable.id),
 	);
+
+	await setPrivateCacheHeaders();
 });
 
 export const Route = createFileRoute("/_consumer/_authed/courses/")({

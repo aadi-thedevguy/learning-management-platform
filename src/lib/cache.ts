@@ -6,6 +6,26 @@ interface CacheEntry {
 const cache = new Map<string, CacheEntry>();
 const tagToKeys = new Map<string, Set<string>>();
 
+const PUBLIC_CACHE_CONTROL =
+	"public, max-age=60, s-maxage=60, stale-while-revalidate=300";
+const PRIVATE_CACHE_CONTROL =
+	"private, max-age=60, stale-while-revalidate=300";
+
+async function setCacheControlHeader(value: string) {
+	// Dynamic import keeps the server-only module out of the client bundle.
+	// eslint-disable-next-line @typescript-eslint/no-shadow
+	const { setResponseHeader } = await import("@tanstack/react-start/server");
+	setResponseHeader("Cache-Control", value);
+}
+
+export async function setPublicCacheHeaders() {
+	return setCacheControlHeader(PUBLIC_CACHE_CONTROL);
+}
+
+export async function setPrivateCacheHeaders() {
+	return setCacheControlHeader(PRIVATE_CACHE_CONTROL);
+}
+
 export async function getCached<T>(
 	key: string,
 	tags: string[],

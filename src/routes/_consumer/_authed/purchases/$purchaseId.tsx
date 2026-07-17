@@ -1,6 +1,7 @@
 import { NotFoundComponent } from "@/components/NotFoundComponent";
 import { createFileRoute, notFound, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { setPrivateCacheHeaders } from "@/lib/cache";
 import { and, eq } from "drizzle-orm";
 import { Fragment } from "react";
 import { z } from "zod";
@@ -79,6 +80,8 @@ export const getPurchase = createServerFn()
             },
           ]
         : [];
+
+    await setPrivateCacheHeaders();
 
     return {
       purchase,

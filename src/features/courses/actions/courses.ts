@@ -20,7 +20,7 @@ import {
 import { wherePublicCourseSections } from "@/features/courseSections/permissions/sections";
 import { wherePublicLessons } from "@/features/lessons/permissions/lessons";
 import { userHasCourseAccess } from "../db/userCourseAcccess";
-import { getCached } from "@/lib/cache";
+import { getCached, setPrivateCacheHeaders } from "@/lib/cache";
 import { getCourseGlobalTag, getCourseIdTag } from "../db/cache/courses";
 import { getUserCourseAccessUserTag } from "../db/cache/userCourseAccess";
 
@@ -133,7 +133,7 @@ export const getCourseLayoutData = createServerFn()
 		const { userId } = await getCurrentUser();
 		if (!userId) throw redirect({ href: "/login" });
 
-		return getCached(
+		const data = await getCached(
 			`course-layout:${courseId}:${userId}`,
 			[
 				getCourseIdTag(courseId),
@@ -195,6 +195,9 @@ export const getCourseLayoutData = createServerFn()
 				};
 			},
 		);
+
+		await setPrivateCacheHeaders();
+		return data;
 	});
 
 export function createCourse(unsafeData: z.infer<typeof courseSchema>) {

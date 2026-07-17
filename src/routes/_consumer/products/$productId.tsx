@@ -1,6 +1,7 @@
 import { NotFoundComponent } from "@/components/NotFoundComponent";
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { setPrivateCacheHeaders, setPublicCacheHeaders } from "@/lib/cache";
 import { and, eq, asc } from "drizzle-orm";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -97,6 +98,7 @@ export const getPublicProduct = createServerFn()
 		const { userId } = await getCurrentUser();
 
 		if (!userId) {
+			await setPublicCacheHeaders();
 			return {
 				...productBase,
 				alreadyOwnsProduct: false,
@@ -109,6 +111,9 @@ export const getPublicProduct = createServerFn()
 			productId: productBase.id,
 		});
 		const coupon = await getUserCoupon();
+
+		await setPrivateCacheHeaders();
+
 		return {
 			...productBase,
 			alreadyOwnsProduct,

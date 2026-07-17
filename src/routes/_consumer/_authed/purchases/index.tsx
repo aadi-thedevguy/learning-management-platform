@@ -1,5 +1,6 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { setPrivateCacheHeaders } from "@/lib/cache";
 import { desc, eq } from "drizzle-orm";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ export const getPurchases = createServerFn().handler(async () => {
   const { userId } = await getCurrentUser();
   if (!userId) throw redirect({ to: "/login" });
 
-  return db.query.PurchaseTable.findMany({
+  const purchases = await db.query.PurchaseTable.findMany({
     columns: {
       id: true,
       pricePaidInCents: true,
@@ -23,6 +24,10 @@ export const getPurchases = createServerFn().handler(async () => {
     where: eq(PurchaseTable.userId, userId),
     orderBy: desc(PurchaseTable.createdAt),
   });
+
+  await setPrivateCacheHeaders();
+
+  return purchases;
 });
 
 export const Route = createFileRoute("/_consumer/_authed/purchases/")({
