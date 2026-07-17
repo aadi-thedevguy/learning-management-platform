@@ -8,6 +8,7 @@ yarn.lock
 .output
 .nitro
 /build/
+dist/
 drizzle
 /api/
 /server/build

@@ -4,17 +4,18 @@ import {
 	S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { env } from "@/env";
 
 const s3Client = new S3Client({
-	region: process.env.AWS_REGION,
+	region: env.AWS_REGION,
 	credentials: {
-		accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? "",
-		secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? "",
+		accessKeyId: env.AWS_ACCESS_KEY_ID,
+		secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
 	},
 });
 
-const bucketName = process.env.S3_BUCKET_NAME ?? "";
-const cloudfrontDomain = process.env.CLOUDFRONT_DOMAIN ?? "";
+const bucketName = env.S3_BUCKET_NAME;
+const cloudfrontDomain = env.CLOUDFRONT_DOMAIN;
 
 export function getVideoKey(lessonId: string, fileName: string) {
 	const extension = fileName.split(".").pop() ?? "mp4";
@@ -25,7 +26,7 @@ export function getVideoPublicUrl(key: string) {
 	if (cloudfrontDomain) {
 		return `https://${cloudfrontDomain}/${key}`;
 	}
-	return `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+	return `https://${bucketName}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
 }
 
 export async function getVideoUploadPresignedUrl(

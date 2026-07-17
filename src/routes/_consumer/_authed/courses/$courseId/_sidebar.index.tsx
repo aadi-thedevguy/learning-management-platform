@@ -21,17 +21,8 @@ function CourseLessonPage() {
 
 	const selectedLesson = lessonId
 		? course.courseSections
-				.flatMap(
-					(section: {
-						lessons: {
-							id: string;
-							name: string;
-							description: string | null;
-							youtubeVideoId: string;
-						}[];
-					}) => section.lessons,
-				)
-				.find((lesson: { id: string }) => lesson.id === lessonId)
+				.flatMap((section) => section.lessons)
+				.find((lesson) => lesson.id === lessonId)
 		: null;
 
 	if (!selectedLesson) {

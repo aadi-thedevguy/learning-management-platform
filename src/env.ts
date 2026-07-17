@@ -11,6 +11,13 @@ export const env = createEnv({
     CLERK_SIGN_UP_URL: z.string().min(1),
     ARCJET_KEY: z.string().min(1),
     TEST_IP_ADDRESS: z.string().min(1).optional(),
+    AWS_ACCESS_KEY_ID: z.string().min(1),
+    AWS_SECRET_ACCESS_KEY: z.string().min(1),
+    AWS_REGION: z.string().min(1),
+    S3_BUCKET_NAME: z.string().min(1),
+    CLOUDFRONT_DOMAIN: z.string().min(1),
+    SES_FROM_EMAIL: z.string().min(1),
+    REDIS_URL: z.string().min(1).optional(),
     DODOPAYMENTS_API_KEY: z.string().min(1),
     DODOPAYMENTS_WEBHOOK_SECRET: z.string().min(1),
     PPP_50_COUPON_ID: z.string().min(1),
@@ -28,6 +35,7 @@ export const env = createEnv({
 
   client: {
     VITE_SERVER_URL: z.url(),
+    VITE_SENTRY_DSN: z.string().optional(),
   },
 
   /**

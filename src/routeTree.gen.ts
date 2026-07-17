@@ -33,7 +33,7 @@ import { Route as AdminCoursesCourseIdEditRouteImport } from './routes/admin/cou
 import { Route as ConsumerProductsProductIdPurchaseRouteImport } from './routes/_consumer/products/$productId.purchase'
 import { Route as ConsumerAuthedPurchasesPurchaseIdRouteImport } from './routes/_consumer/_authed/purchases/$purchaseId'
 import { Route as ConsumerAuthedCoursesCourseIdSidebarRouteImport } from './routes/_consumer/_authed/courses/$courseId/_sidebar'
-import { Route as ConsumerAuthedCoursesCourseIdSidebarIndexRouteImport } from './routes/_consumer/_authed/courses/$courseId/_sidebar/index'
+import { Route as ConsumerAuthedCoursesCourseIdSidebarIndexRouteImport } from './routes/_consumer/_authed/courses/$courseId/_sidebar.index'
 
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',

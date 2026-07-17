@@ -8,6 +8,7 @@ import { env } from "@/env";
 import { addUserCourseAccess } from "@/features/courses/db/userCourseAcccess";
 import { insertPurchase } from "@/features/purchases/db/purchases";
 import { getUser } from "@/services/clerk";
+import { sendPurchaseConfirmationEmail } from "@/services/email";
 
 export const Route = createFileRoute("/api/webhooks/payment")({
 	server: {
@@ -112,6 +113,17 @@ async function POST({ request }: { request: Request }) {
 						trx,
 					);
 				});
+
+				try {
+					await sendPurchaseConfirmationEmail({
+						to: user.email,
+						userName: user.name,
+						productName: product.name,
+					});
+					console.log("📧 Purchase confirmation email sent");
+				} catch (emailError) {
+					console.error("📧 Failed to send purchase confirmation email:", emailError);
+				}
 
 				console.log("✨ New Purchase Created Successfully");
 			} catch (error) {

@@ -4,12 +4,12 @@
   "type": "module",
   "scripts": {
     "dev": "dotenv -e .env -- sh -c \"NODE_OPTIONS='--import ./instrument.server.mjs' vite dev --port 3000\"",
-    "build": "vite build && cp instrument.server.mjs .output/server",
+    "build": "vite build && cp instrument.server.mjs dist/server/",
     "preview": "vite preview",
     "test": "vitest run",
     "format": "biome check --write .",
     "lint": "biome lint",
-    "start": "node --import ./.output/server/instrument.server.mjs .output/server/index.mjs",
+    "start": "node --import ./dist/server/instrument.server.mjs ./dist/server/server.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
@@ -19,6 +19,7 @@
   "dependencies": {
     "@arcjet/node": "^1.4.0",
     "@aws-sdk/client-s3": "^3.1087.0",
+    "@aws-sdk/client-ses": "^3.1087.0",
     "@aws-sdk/s3-request-presigner": "^3.1087.0",
     "@clerk/tanstack-react-start": "^1.2.5",
     "@dnd-kit/core": "^6.3.1",
