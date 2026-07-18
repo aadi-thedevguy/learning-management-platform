@@ -19,6 +19,8 @@ export const UserTable = pgTable("user", {
 	emailVerified: boolean("emailVerified").notNull().default(false),
 	image: text(),
 	role: userRoleEnum().notNull().default("user"),
+	username: text("username").unique(),
+	displayUsername: text("displayUsername"),
 	deletedAt: timestamp({ withTimezone: true }),
 	createdAt: timestamp("createdAt").notNull().defaultNow(),
 	updatedAt: timestamp("updatedAt").notNull().defaultNow(),

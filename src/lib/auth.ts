@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "@better-auth/drizzle-adapter";
 import { admin as adminPlugin } from "better-auth/plugins/admin";
+import { username, lastLoginMethod } from "better-auth/plugins";
 import { createAccessControl } from "better-auth/plugins/access";
 import {
 	defaultStatements,
@@ -80,8 +81,16 @@ export const auth = betterAuth({
 			maxAge: 60,
 		},
 	},
+	socialProviders: {
+		google: {
+			clientId: env.GOOGLE_CLIENT_ID,
+			clientSecret: env.GOOGLE_CLIENT_SECRET,
+		},
+	},
 	plugins: [
 		tanstackStartCookies(),
+		username(),
+		lastLoginMethod(),
 		adminPlugin({
 			ac,
 			roles: {

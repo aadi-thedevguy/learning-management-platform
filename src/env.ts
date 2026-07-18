@@ -22,6 +22,8 @@ export const env = createEnv({
     PPP_30_COUPON_ID: z.string().min(1),
     PPP_20_COUPON_ID: z.string().min(1),
     SERVER_URL: z.url(),
+    GOOGLE_CLIENT_ID: z.string().min(1),
+    GOOGLE_CLIENT_SECRET: z.string().min(1),
   },
 
   /**
