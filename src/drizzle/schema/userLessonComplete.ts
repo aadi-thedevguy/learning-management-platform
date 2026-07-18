@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
+import { pgTable, primaryKey, text, uuid } from "drizzle-orm/pg-core";
 import { createdAt, updatedAt } from "../schemaHelpers";
 import { LessonTable } from "./lesson";
 import { UserTable } from "./user";
@@ -7,7 +7,7 @@ import { UserTable } from "./user";
 export const UserLessonCompleteTable = pgTable(
 	"user_lesson_complete",
 	{
-		userId: uuid()
+		userId: text()
 			.notNull()
 			.references(() => UserTable.id, { onDelete: "cascade" }),
 		lessonId: uuid()

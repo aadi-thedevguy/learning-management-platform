@@ -3,7 +3,6 @@ import { eq } from "drizzle-orm";
 import { db } from "@/drizzle/db";
 import type { UserRole } from "@/drizzle/schema";
 import { UserTable } from "@/drizzle/schema";
-import { upsertUser } from "@/features/users/db/users";
 import { auth } from "@/lib/auth";
 import { getRequestHeaders } from "@tanstack/react-start/server";
 
@@ -21,26 +20,13 @@ export async function getCurrentUser({ allData = false } = {}) {
 		};
 	}
 
-	let dbUser =
-		allData || session.user.role == null
-			? await getUserByAuthId(session.user.id)
-			: undefined;
-
-	if (dbUser == null) {
-		dbUser = await upsertUser({
-			authUserId: session.user.id,
-			email: session.user.email,
-			name: session.user.name,
-			imageUrl: session.user.image,
-			role: (session.user.role as UserRole | undefined) || "user",
-		});
-	}
+	const dbUser = allData ? await getUser(session.user.id) : undefined;
 
 	return {
 		authUserId: session.user.id,
-		userId: dbUser.id,
-		role: (session.user.role as UserRole | undefined) ?? dbUser.role,
-		user: allData ? dbUser : undefined,
+		userId: session.user.id,
+		role: (session.user.role as UserRole | undefined) ?? dbUser?.role,
+		user: dbUser,
 		redirectToSignIn: () => redirect({ to: "/login" }),
 	};
 }
@@ -48,11 +34,5 @@ export async function getCurrentUser({ allData = false } = {}) {
 export async function getUser(id: string) {
 	return db.query.UserTable.findFirst({
 		where: eq(UserTable.id, id),
-	});
-}
-
-export async function getUserByAuthId(authUserId: string) {
-	return db.query.UserTable.findFirst({
-		where: eq(UserTable.authUserId, authUserId),
 	});
 }

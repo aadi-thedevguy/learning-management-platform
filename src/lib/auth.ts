@@ -9,9 +9,14 @@ import {
 } from "better-auth/plugins/admin/access";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { db } from "@/drizzle/db";
+import {
+	AccountTable,
+	SessionTable,
+	UserTable,
+	VerificationTable,
+} from "@/drizzle/schema";
 import { env } from "@/env";
 import { sendEmail } from "@/services/email";
-import { upsertUser } from "@/features/users/db/users";
 
 export const ac = createAccessControl(defaultStatements);
 export const user = ac.newRole({
@@ -28,7 +33,23 @@ export const auth = betterAuth({
 	trustedOrigins: [env.BETTER_AUTH_URL],
 	database: drizzleAdapter(db, {
 		provider: "pg",
+		schema: {
+			user: UserTable,
+			session: SessionTable,
+			account: AccountTable,
+			verification: VerificationTable,
+		},
 	}),
+	user: {
+		additionalFields: {
+			role: {
+				type: ["user", "admin"],
+				required: false,
+				defaultValue: "user",
+				input: false,
+			},
+		},
+	},
 	emailAndPassword: {
 		enabled: true,
 		requireEmailVerification: true,
@@ -69,30 +90,4 @@ export const auth = betterAuth({
 			},
 		}),
 	],
-	databaseHooks: {
-		user: {
-			create: {
-				after: async (user) => {
-					await upsertUser({
-						authUserId: user.id,
-						email: user.email,
-						name: user.name,
-						imageUrl: user.image,
-						role: (user.role as "user" | "admin") || "user",
-					});
-				},
-			},
-			update: {
-				after: async (user) => {
-					await upsertUser({
-						authUserId: user.id,
-						email: user.email,
-						name: user.name,
-						imageUrl: user.image,
-						role: (user.role as "user" | "admin") || "user",
-					});
-				},
-			},
-		},
-	},
 });
