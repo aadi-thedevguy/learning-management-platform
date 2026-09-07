@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { getCurrentUser } from "@/services/auth";
 import { getAssetUploadPresignedUrl } from "@/services/s3";
+import { isZipCourseAsset } from "../lib/courseAssets";
 import { canUpdateCourses } from "../permissions/courses";
 
 export const getCourseAssetUploadUrl = createServerFn({ method: "POST" })
@@ -16,6 +17,10 @@ export const getCourseAssetUploadUrl = createServerFn({ method: "POST" })
 		const user = await getCurrentUser();
 		if (!canUpdateCourses(user)) {
 			return { error: true, message: "Not authorized" };
+		}
+
+		if (!isZipCourseAsset(data.fileName, data.contentType)) {
+			return { error: true, message: "Course assets must be .zip files" };
 		}
 
 		try {

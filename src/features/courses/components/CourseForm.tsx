@@ -58,6 +58,16 @@ export function CourseForm({
 	}
 
 	async function handleAssetUpload(file: File) {
+		if (!file.name.toLowerCase().endsWith(".zip")) {
+			actionToast({
+				actionData: {
+					error: true,
+					message: "Course assets must be uploaded as .zip files",
+				},
+			});
+			return;
+		}
+
 		if (!course) {
 			actionToast({
 				actionData: {
@@ -134,8 +144,13 @@ export function CourseForm({
 							<FormControl>
 								<Input {...field} value={field.value ?? ""} readOnly />
 							</FormControl>
+							<p className="text-sm text-muted-foreground">
+								Upload a single .zip file containing all course assets. Only
+								.zip files are accepted.
+							</p>
 							<Input
 								type="file"
+								accept=".zip,application/zip,application/x-zip-compressed"
 								onChange={(e) => {
 									const file = e.target.files?.[0];
 									if (file) handleAssetUpload(file);
