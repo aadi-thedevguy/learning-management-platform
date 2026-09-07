@@ -17,7 +17,6 @@
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
-    "@arcjet/node": "^1.4.0",
     "@aws-sdk/client-s3": "^3.1087.0",
     "@aws-sdk/client-ses": "^3.1087.0",
     "@aws-sdk/s3-request-presigner": "^3.1087.0",
@@ -61,7 +60,6 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.74.0",
-    "react-youtube": "^10.1.0",
     "standardwebhooks": "^1.0.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.1.18",

@@ -9,52 +9,36 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as ConsumerRouteImport } from './routes/_consumer'
-import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as ConsumerIndexRouteImport } from './routes/_consumer/index'
-import { Route as AdminSalesRouteImport } from './routes/admin/sales'
 import { Route as ConsumerAuthedRouteImport } from './routes/_consumer/_authed'
-import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/index'
-import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
-import { Route as ApiWebhooksPaymentRouteImport } from './routes/api/webhooks/payment'
-import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as AdminProductsNewRouteImport } from './routes/admin/products/new'
-import { Route as AdminCoursesNewRouteImport } from './routes/admin/courses/new'
-import { Route as ConsumerPurchaseAfterRouteImport } from './routes/_consumer/purchase.after'
+import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminSalesRouteImport } from './routes/admin/sales'
 import { Route as ConsumerProductsProductIdRouteImport } from './routes/_consumer/products/$productId'
-import { Route as ConsumerAuthedPurchasesIndexRouteImport } from './routes/_consumer/_authed/purchases/index'
+import { Route as ConsumerPurchaseAfterRouteImport } from './routes/_consumer/purchase.after'
+import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
+import { Route as AdminCoursesNewRouteImport } from './routes/admin/courses/new'
+import { Route as AdminProductsIndexRouteImport } from './routes/admin/products/index'
+import { Route as AdminProductsNewRouteImport } from './routes/admin/products/new'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiWebhooksPaymentRouteImport } from './routes/api/webhooks/payment'
 import { Route as ConsumerAuthedCoursesIndexRouteImport } from './routes/_consumer/_authed/courses/index'
-import { Route as ApiPurchasesPaymentIdInvoiceRouteImport } from './routes/api/purchases/$paymentId.invoice'
-import { Route as AdminProductsProductIdEditRouteImport } from './routes/admin/products/$productId.edit'
-import { Route as AdminCoursesCourseIdEditRouteImport } from './routes/admin/courses/$courseId.edit'
-import { Route as ConsumerProductsProductIdPurchaseRouteImport } from './routes/_consumer/products/$productId.purchase'
+import { Route as ConsumerAuthedPurchasesIndexRouteImport } from './routes/_consumer/_authed/purchases/index'
 import { Route as ConsumerAuthedPurchasesPurchaseIdRouteImport } from './routes/_consumer/_authed/purchases/$purchaseId'
+import { Route as ConsumerProductsProductIdPurchaseRouteImport } from './routes/_consumer/products/$productId.purchase'
+import { Route as AdminCoursesCourseIdEditRouteImport } from './routes/admin/courses/$courseId.edit'
+import { Route as AdminProductsProductIdEditRouteImport } from './routes/admin/products/$productId.edit'
+import { Route as ApiPurchasesPaymentIdInvoiceRouteImport } from './routes/api/purchases/$paymentId.invoice'
 import { Route as ConsumerAuthedCoursesCourseIdSidebarRouteImport } from './routes/_consumer/_authed/courses/$courseId/_sidebar'
 import { Route as ConsumerAuthedCoursesCourseIdSidebarIndexRouteImport } from './routes/_consumer/_authed/courses/$courseId/_sidebar.index'
 
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
-  id: '/forgot-password',
-  path: '/forgot-password',
+const ConsumerRoute = ConsumerRouteImport.update({
+  id: '/_consumer',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -62,63 +46,44 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ConsumerRoute = ConsumerRouteImport.update({
-  id: '/_consumer',
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ConsumerIndexRoute = ConsumerIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => ConsumerRoute,
 } as any)
-const AdminSalesRoute = AdminSalesRouteImport.update({
-  id: '/sales',
-  path: '/sales',
-  getParentRoute: () => AdminRoute,
-} as any)
 const ConsumerAuthedRoute = ConsumerAuthedRouteImport.update({
   id: '/_authed',
   getParentRoute: () => ConsumerRoute,
 } as any)
-const AdminProductsIndexRoute = AdminProductsIndexRouteImport.update({
-  id: '/products/',
-  path: '/products/',
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminCoursesIndexRoute = AdminCoursesIndexRouteImport.update({
-  id: '/courses/',
-  path: '/courses/',
+const AdminSalesRoute = AdminSalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
   getParentRoute: () => AdminRoute,
-} as any)
-const ApiWebhooksPaymentRoute = ApiWebhooksPaymentRouteImport.update({
-  id: '/api/webhooks/payment',
-  path: '/api/webhooks/payment',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: '/api/auth/$',
-  path: '/api/auth/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminProductsNewRoute = AdminProductsNewRouteImport.update({
-  id: '/products/new',
-  path: '/products/new',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminCoursesNewRoute = AdminCoursesNewRouteImport.update({
-  id: '/courses/new',
-  path: '/courses/new',
-  getParentRoute: () => AdminRoute,
-} as any)
-const ConsumerPurchaseAfterRoute = ConsumerPurchaseAfterRouteImport.update({
-  id: '/purchase/after',
-  path: '/purchase/after',
-  getParentRoute: () => ConsumerRoute,
 } as any)
 const ConsumerProductsProductIdRoute =
   ConsumerProductsProductIdRouteImport.update({
@@ -126,35 +91,58 @@ const ConsumerProductsProductIdRoute =
     path: '/products/$productId',
     getParentRoute: () => ConsumerRoute,
   } as any)
-const ConsumerAuthedPurchasesIndexRoute =
-  ConsumerAuthedPurchasesIndexRouteImport.update({
-    id: '/purchases/',
-    path: '/purchases/',
-    getParentRoute: () => ConsumerAuthedRoute,
-  } as any)
+const ConsumerPurchaseAfterRoute = ConsumerPurchaseAfterRouteImport.update({
+  id: '/purchase/after',
+  path: '/purchase/after',
+  getParentRoute: () => ConsumerRoute,
+} as any)
+const AdminCoursesIndexRoute = AdminCoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCoursesNewRoute = AdminCoursesNewRouteImport.update({
+  id: '/courses/new',
+  path: '/courses/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProductsIndexRoute = AdminProductsIndexRouteImport.update({
+  id: '/products/',
+  path: '/products/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProductsNewRoute = AdminProductsNewRouteImport.update({
+  id: '/products/new',
+  path: '/products/new',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiWebhooksPaymentRoute = ApiWebhooksPaymentRouteImport.update({
+  id: '/api/webhooks/payment',
+  path: '/api/webhooks/payment',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsumerAuthedCoursesIndexRoute =
   ConsumerAuthedCoursesIndexRouteImport.update({
     id: '/courses/',
     path: '/courses/',
     getParentRoute: () => ConsumerAuthedRoute,
   } as any)
-const ApiPurchasesPaymentIdInvoiceRoute =
-  ApiPurchasesPaymentIdInvoiceRouteImport.update({
-    id: '/api/purchases/$paymentId/invoice',
-    path: '/api/purchases/$paymentId/invoice',
-    getParentRoute: () => rootRouteImport,
+const ConsumerAuthedPurchasesIndexRoute =
+  ConsumerAuthedPurchasesIndexRouteImport.update({
+    id: '/purchases/',
+    path: '/purchases/',
+    getParentRoute: () => ConsumerAuthedRoute,
   } as any)
-const AdminProductsProductIdEditRoute =
-  AdminProductsProductIdEditRouteImport.update({
-    id: '/products/$productId/edit',
-    path: '/products/$productId/edit',
-    getParentRoute: () => AdminRoute,
-  } as any)
-const AdminCoursesCourseIdEditRoute =
-  AdminCoursesCourseIdEditRouteImport.update({
-    id: '/courses/$courseId/edit',
-    path: '/courses/$courseId/edit',
-    getParentRoute: () => AdminRoute,
+const ConsumerAuthedPurchasesPurchaseIdRoute =
+  ConsumerAuthedPurchasesPurchaseIdRouteImport.update({
+    id: '/purchases/$purchaseId',
+    path: '/purchases/$purchaseId',
+    getParentRoute: () => ConsumerAuthedRoute,
   } as any)
 const ConsumerProductsProductIdPurchaseRoute =
   ConsumerProductsProductIdPurchaseRouteImport.update({
@@ -162,11 +150,23 @@ const ConsumerProductsProductIdPurchaseRoute =
     path: '/purchase',
     getParentRoute: () => ConsumerProductsProductIdRoute,
   } as any)
-const ConsumerAuthedPurchasesPurchaseIdRoute =
-  ConsumerAuthedPurchasesPurchaseIdRouteImport.update({
-    id: '/purchases/$purchaseId',
-    path: '/purchases/$purchaseId',
-    getParentRoute: () => ConsumerAuthedRoute,
+const AdminCoursesCourseIdEditRoute =
+  AdminCoursesCourseIdEditRouteImport.update({
+    id: '/courses/$courseId/edit',
+    path: '/courses/$courseId/edit',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const AdminProductsProductIdEditRoute =
+  AdminProductsProductIdEditRouteImport.update({
+    id: '/products/$productId/edit',
+    path: '/products/$productId/edit',
+    getParentRoute: () => AdminRoute,
+  } as any)
+const ApiPurchasesPaymentIdInvoiceRoute =
+  ApiPurchasesPaymentIdInvoiceRouteImport.update({
+    id: '/api/purchases/$paymentId/invoice',
+    path: '/api/purchases/$paymentId/invoice',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const ConsumerAuthedCoursesCourseIdSidebarRoute =
   ConsumerAuthedCoursesCourseIdSidebarRouteImport.update({
@@ -361,32 +361,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/forgot-password': {
-      id: '/forgot-password'
-      path: '/forgot-password'
-      fullPath: '/forgot-password'
-      preLoaderRoute: typeof ForgotPasswordRouteImport
+    '/_consumer': {
+      id: '/_consumer'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ConsumerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -396,19 +375,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_consumer': {
-      id: '/_consumer'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof ConsumerRouteImport
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_consumer/': {
       id: '/_consumer/'
@@ -417,13 +410,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumerIndexRouteImport
       parentRoute: typeof ConsumerRoute
     }
-    '/admin/sales': {
-      id: '/admin/sales'
-      path: '/sales'
-      fullPath: '/admin/sales'
-      preLoaderRoute: typeof AdminSalesRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/_consumer/_authed': {
       id: '/_consumer/_authed'
       path: ''
@@ -431,39 +417,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumerAuthedRouteImport
       parentRoute: typeof ConsumerRoute
     }
-    '/admin/products/': {
-      id: '/admin/products/'
-      path: '/products'
-      fullPath: '/admin/products/'
-      preLoaderRoute: typeof AdminProductsIndexRouteImport
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/admin/sales': {
+      id: '/admin/sales'
+      path: '/sales'
+      fullPath: '/admin/sales'
+      preLoaderRoute: typeof AdminSalesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_consumer/products/$productId': {
+      id: '/_consumer/products/$productId'
+      path: '/products/$productId'
+      fullPath: '/products/$productId'
+      preLoaderRoute: typeof ConsumerProductsProductIdRouteImport
+      parentRoute: typeof ConsumerRoute
+    }
+    '/_consumer/purchase/after': {
+      id: '/_consumer/purchase/after'
+      path: '/purchase/after'
+      fullPath: '/purchase/after'
+      preLoaderRoute: typeof ConsumerPurchaseAfterRouteImport
+      parentRoute: typeof ConsumerRoute
     }
     '/admin/courses/': {
       id: '/admin/courses/'
       path: '/courses'
       fullPath: '/admin/courses/'
       preLoaderRoute: typeof AdminCoursesIndexRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/api/webhooks/payment': {
-      id: '/api/webhooks/payment'
-      path: '/api/webhooks/payment'
-      fullPath: '/api/webhooks/payment'
-      preLoaderRoute: typeof ApiWebhooksPaymentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/auth/$': {
-      id: '/api/auth/$'
-      path: '/api/auth/$'
-      fullPath: '/api/auth/$'
-      preLoaderRoute: typeof ApiAuthSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin/products/new': {
-      id: '/admin/products/new'
-      path: '/products/new'
-      fullPath: '/admin/products/new'
-      preLoaderRoute: typeof AdminProductsNewRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/courses/new': {
@@ -473,26 +459,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminCoursesNewRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/_consumer/purchase/after': {
-      id: '/_consumer/purchase/after'
-      path: '/purchase/after'
-      fullPath: '/purchase/after'
-      preLoaderRoute: typeof ConsumerPurchaseAfterRouteImport
-      parentRoute: typeof ConsumerRoute
+    '/admin/products/': {
+      id: '/admin/products/'
+      path: '/products'
+      fullPath: '/admin/products/'
+      preLoaderRoute: typeof AdminProductsIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/_consumer/products/$productId': {
-      id: '/_consumer/products/$productId'
-      path: '/products/$productId'
-      fullPath: '/products/$productId'
-      preLoaderRoute: typeof ConsumerProductsProductIdRouteImport
-      parentRoute: typeof ConsumerRoute
+    '/admin/products/new': {
+      id: '/admin/products/new'
+      path: '/products/new'
+      fullPath: '/admin/products/new'
+      preLoaderRoute: typeof AdminProductsNewRouteImport
+      parentRoute: typeof AdminRoute
     }
-    '/_consumer/_authed/purchases/': {
-      id: '/_consumer/_authed/purchases/'
-      path: '/purchases'
-      fullPath: '/purchases/'
-      preLoaderRoute: typeof ConsumerAuthedPurchasesIndexRouteImport
-      parentRoute: typeof ConsumerAuthedRoute
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/webhooks/payment': {
+      id: '/api/webhooks/payment'
+      path: '/api/webhooks/payment'
+      fullPath: '/api/webhooks/payment'
+      preLoaderRoute: typeof ApiWebhooksPaymentRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_consumer/_authed/courses/': {
       id: '/_consumer/_authed/courses/'
@@ -501,26 +494,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumerAuthedCoursesIndexRouteImport
       parentRoute: typeof ConsumerAuthedRoute
     }
-    '/api/purchases/$paymentId/invoice': {
-      id: '/api/purchases/$paymentId/invoice'
-      path: '/api/purchases/$paymentId/invoice'
-      fullPath: '/api/purchases/$paymentId/invoice'
-      preLoaderRoute: typeof ApiPurchasesPaymentIdInvoiceRouteImport
-      parentRoute: typeof rootRouteImport
+    '/_consumer/_authed/purchases/': {
+      id: '/_consumer/_authed/purchases/'
+      path: '/purchases'
+      fullPath: '/purchases/'
+      preLoaderRoute: typeof ConsumerAuthedPurchasesIndexRouteImport
+      parentRoute: typeof ConsumerAuthedRoute
     }
-    '/admin/products/$productId/edit': {
-      id: '/admin/products/$productId/edit'
-      path: '/products/$productId/edit'
-      fullPath: '/admin/products/$productId/edit'
-      preLoaderRoute: typeof AdminProductsProductIdEditRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/courses/$courseId/edit': {
-      id: '/admin/courses/$courseId/edit'
-      path: '/courses/$courseId/edit'
-      fullPath: '/admin/courses/$courseId/edit'
-      preLoaderRoute: typeof AdminCoursesCourseIdEditRouteImport
-      parentRoute: typeof AdminRoute
+    '/_consumer/_authed/purchases/$purchaseId': {
+      id: '/_consumer/_authed/purchases/$purchaseId'
+      path: '/purchases/$purchaseId'
+      fullPath: '/purchases/$purchaseId'
+      preLoaderRoute: typeof ConsumerAuthedPurchasesPurchaseIdRouteImport
+      parentRoute: typeof ConsumerAuthedRoute
     }
     '/_consumer/products/$productId/purchase': {
       id: '/_consumer/products/$productId/purchase'
@@ -529,12 +515,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsumerProductsProductIdPurchaseRouteImport
       parentRoute: typeof ConsumerProductsProductIdRoute
     }
-    '/_consumer/_authed/purchases/$purchaseId': {
-      id: '/_consumer/_authed/purchases/$purchaseId'
-      path: '/purchases/$purchaseId'
-      fullPath: '/purchases/$purchaseId'
-      preLoaderRoute: typeof ConsumerAuthedPurchasesPurchaseIdRouteImport
-      parentRoute: typeof ConsumerAuthedRoute
+    '/admin/courses/$courseId/edit': {
+      id: '/admin/courses/$courseId/edit'
+      path: '/courses/$courseId/edit'
+      fullPath: '/admin/courses/$courseId/edit'
+      preLoaderRoute: typeof AdminCoursesCourseIdEditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/products/$productId/edit': {
+      id: '/admin/products/$productId/edit'
+      path: '/products/$productId/edit'
+      fullPath: '/admin/products/$productId/edit'
+      preLoaderRoute: typeof AdminProductsProductIdEditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/api/purchases/$paymentId/invoice': {
+      id: '/api/purchases/$paymentId/invoice'
+      path: '/api/purchases/$paymentId/invoice'
+      fullPath: '/api/purchases/$paymentId/invoice'
+      preLoaderRoute: typeof ApiPurchasesPaymentIdInvoiceRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_consumer/_authed/courses/$courseId/_sidebar': {
       id: '/_consumer/_authed/courses/$courseId/_sidebar'

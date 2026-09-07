@@ -20,7 +20,6 @@ export function SortableLessonList({
 		id: string;
 		name: string;
 		status: LessonStatus;
-		youtubeVideoId: string | null;
 		videoUrl: string | null;
 		description: string | null;
 		sectionId: string;

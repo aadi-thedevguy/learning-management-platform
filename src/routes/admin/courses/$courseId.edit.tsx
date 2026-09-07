@@ -22,7 +22,7 @@ export const getCourse = createServerFn()
 	.inputValidator(z.object({ courseId: z.string() }))
 	.handler(async ({ data }) => {
 		const course = await db.query.CourseTable.findFirst({
-			columns: { id: true, name: true, description: true },
+			columns: { id: true, name: true, description: true, assetUrl: true },
 			where: eq(CourseTable.id, data.courseId),
 			with: {
 				courseSections: {
@@ -36,7 +36,6 @@ export const getCourse = createServerFn()
 								name: true,
 								status: true,
 								description: true,
-								youtubeVideoId: true,
 								videoUrl: true,
 								sectionId: true,
 							},

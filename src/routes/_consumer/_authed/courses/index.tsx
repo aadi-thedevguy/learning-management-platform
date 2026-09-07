@@ -32,6 +32,8 @@ export const getUserCourses = createServerFn().handler(async () => {
 	const { userId } = await getCurrentUser();
 	if (!userId) throw redirect({ href: "/login" });
 
+	await setPrivateCacheHeaders();
+
 	return getCached(
 		`user-courses:${userId}`,
 		[getUserCourseAccessUserTag(userId), getCourseGlobalTag()],
@@ -77,8 +79,6 @@ export const getUserCourses = createServerFn().handler(async () => {
 				.orderBy(CourseTable.name)
 				.groupBy(CourseTable.id),
 	);
-
-	await setPrivateCacheHeaders();
 });
 
 export const Route = createFileRoute("/_consumer/_authed/courses/")({

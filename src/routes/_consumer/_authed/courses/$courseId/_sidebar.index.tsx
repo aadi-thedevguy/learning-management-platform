@@ -19,11 +19,10 @@ function CourseLessonPage() {
 	const { course } = Route.useLoaderData();
 	const { lessonId } = Route.useSearch();
 
+	const lessons = course.courseSections.flatMap((section) => section.lessons);
 	const selectedLesson = lessonId
-		? course.courseSections
-				.flatMap((section) => section.lessons)
-				.find((lesson) => lesson.id === lessonId)
-		: null;
+		? lessons.find((lesson) => lesson.id === lessonId)
+		: lessons[0];
 
 	if (!selectedLesson) {
 		return (
@@ -38,10 +37,7 @@ function CourseLessonPage() {
 	return (
 		<div className="flex flex-col gap-6">
 			<div className="aspect-video overflow-hidden rounded-lg bg-black">
-				<VideoPlayer
-					videoUrl={selectedLesson.videoUrl}
-					youtubeVideoId={selectedLesson.youtubeVideoId}
-				/>
+				<VideoPlayer videoUrl={selectedLesson.videoUrl} />
 			</div>
 			<div className="flex flex-col gap-2">
 				<h1 className="text-2xl font-semibold">{selectedLesson.name}</h1>

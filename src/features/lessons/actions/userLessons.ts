@@ -82,7 +82,6 @@ export const getLesson = createServerFn()
 				const lesson = await db.query.LessonTable.findFirst({
 					columns: {
 						id: true,
-						youtubeVideoId: true,
 						videoUrl: true,
 						name: true,
 						description: true,

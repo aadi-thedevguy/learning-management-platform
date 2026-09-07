@@ -1,6 +1,6 @@
 import { createStart } from "@tanstack/react-start";
-import { arcjetMiddleware } from "./middleware";
+import { countryMiddleware } from "./middleware";
 
 export const startInstance = createStart(() => ({
-	requestMiddleware: [arcjetMiddleware],
+	requestMiddleware: [countryMiddleware],
 }));

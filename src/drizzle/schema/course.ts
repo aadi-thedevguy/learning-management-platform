@@ -9,6 +9,7 @@ export const CourseTable = pgTable("courses", {
 	id,
 	name: text().notNull(),
 	description: text().notNull(),
+	assetUrl: text(),
 	createdAt,
 	updatedAt,
 });

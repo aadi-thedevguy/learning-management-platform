@@ -45,7 +45,6 @@ export function LessonForm({
 		id: string;
 		name: string;
 		status: LessonStatus;
-		youtubeVideoId: string | null;
 		videoUrl: string | null;
 		description: string | null;
 		sectionId: string;
@@ -58,7 +57,6 @@ export function LessonForm({
 		defaultValues: {
 			name: lesson?.name ?? "",
 			status: lesson?.status ?? "public",
-			youtubeVideoId: lesson?.youtubeVideoId ?? "",
 			videoUrl: lesson?.videoUrl ?? "",
 			description: lesson?.description ?? "",
 			sectionId: lesson?.sectionId ?? defaultSectionId ?? sections[0]?.id ?? "",
@@ -118,7 +116,6 @@ export function LessonForm({
 	}
 
 	const videoUrl = form.watch("videoUrl");
-	const youtubeVideoId = form.watch("youtubeVideoId");
 
 	return (
 		<Form {...form}>
@@ -138,19 +135,6 @@ export function LessonForm({
 								</FormLabel>
 								<FormControl>
 									<Input {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="youtubeVideoId"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>YouTube Video Id</FormLabel>
-								<FormControl>
-									<Input {...field} value={field.value ?? ""} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -250,9 +234,9 @@ export function LessonForm({
 								: "Create"}
 					</Button>
 				</div>
-				{videoUrl || youtubeVideoId ? (
+				{videoUrl ? (
 					<div className="aspect-video">
-						<VideoPlayer videoUrl={videoUrl} youtubeVideoId={youtubeVideoId} />
+						<VideoPlayer videoUrl={videoUrl} />
 					</div>
 				) : null}
 			</form>

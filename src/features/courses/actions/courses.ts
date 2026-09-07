@@ -133,6 +133,8 @@ export const getCourseLayoutData = createServerFn()
 		const { userId } = await getCurrentUser();
 		if (!userId) throw redirect({ href: "/login" });
 
+		await setPrivateCacheHeaders();
+
 		const data = await getCached(
 			`course-layout:${courseId}:${userId}`,
 			[
@@ -160,7 +162,6 @@ export const getCourseLayoutData = createServerFn()
 										id: true,
 										name: true,
 										description: true,
-										youtubeVideoId: true,
 										videoUrl: true,
 									},
 								},
@@ -196,7 +197,6 @@ export const getCourseLayoutData = createServerFn()
 			},
 		);
 
-		await setPrivateCacheHeaders();
 		return data;
 	});
 

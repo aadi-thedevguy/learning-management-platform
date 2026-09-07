@@ -17,17 +17,27 @@ const s3Client = new S3Client({
 const bucketName = env.S3_BUCKET_NAME;
 const cloudfrontDomain = env.CLOUDFRONT_DOMAIN;
 
+function sanitizeFileName(fileName: string) {
+	return fileName.replace(/[^a-zA-Z0-9._-]/g, "-");
+}
+
 export function getVideoKey(lessonId: string, fileName: string) {
 	const extension = fileName.split(".").pop() ?? "mp4";
 	return `videos/${lessonId}.${extension}`;
 }
 
-export function getVideoPublicUrl(key: string) {
+export function getAssetKey(prefix: string, fileName: string) {
+	return `assets/${prefix}/${crypto.randomUUID()}-${sanitizeFileName(fileName)}`;
+}
+
+export function getS3PublicUrl(key: string) {
 	if (cloudfrontDomain) {
 		return `https://${cloudfrontDomain}/${key}`;
 	}
 	return `https://${bucketName}.s3.${env.AWS_REGION}.amazonaws.com/${key}`;
 }
+
+export const getVideoPublicUrl = getS3PublicUrl;
 
 export async function getVideoUploadPresignedUrl(
 	lessonId: string,
@@ -42,6 +52,22 @@ export async function getVideoUploadPresignedUrl(
 	});
 	const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
 	const publicUrl = getVideoPublicUrl(key);
+	return { uploadUrl, publicUrl, key };
+}
+
+export async function getAssetUploadPresignedUrl(
+	prefix: string,
+	fileName: string,
+	contentType = "application/octet-stream",
+) {
+	const key = getAssetKey(prefix, fileName);
+	const command = new PutObjectCommand({
+		Bucket: bucketName,
+		Key: key,
+		ContentType: contentType,
+	});
+	const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 });
+	const publicUrl = getS3PublicUrl(key);
 	return { uploadUrl, publicUrl, key };
 }
 
