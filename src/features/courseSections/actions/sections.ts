@@ -16,7 +16,7 @@ import {
 import { sectionSchema } from "../schemas/sections";
 
 const createSectionFn = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ courseId: z.string(), values: sectionSchema }))
+  .validator(z.object({ courseId: z.string(), values: sectionSchema }))
   .handler(async ({ data }) => {
     try {
       if (!canCreateCourseSections(await getCurrentUser())) {
@@ -56,7 +56,7 @@ const createSectionFn = createServerFn({ method: "POST" })
   });
 
 const updateSectionFn = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ id: z.string(), values: sectionSchema }))
+  .validator(z.object({ id: z.string(), values: sectionSchema }))
   .handler(async ({ data }) => {
     try {
       if (!canUpdateCourseSections(await getCurrentUser())) {
@@ -91,7 +91,7 @@ const updateSectionFn = createServerFn({ method: "POST" })
   });
 
 const deleteSectionFn = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ id: z.string() }))
+  .validator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
     try {
       if (!canDeleteCourseSections(await getCurrentUser())) {
@@ -117,7 +117,7 @@ const deleteSectionFn = createServerFn({ method: "POST" })
   });
 
 const updateSectionOrdersFn = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ sectionIds: z.array(z.string()) }))
+  .validator(z.object({ sectionIds: z.array(z.string()) }))
   .handler(async ({ data }) => {
     if (
       data.sectionIds.length === 0 ||

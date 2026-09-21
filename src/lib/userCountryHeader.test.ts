@@ -8,8 +8,11 @@ beforeAll(() => {
 	vi.stubEnv("AWS_ACCESS_KEY_ID", "test");
 	vi.stubEnv("AWS_SECRET_ACCESS_KEY", "test");
 	vi.stubEnv("AWS_REGION", "us-east-1");
-	vi.stubEnv("S3_BUCKET_NAME", "test");
-	vi.stubEnv("CLOUDFRONT_DOMAIN", "https://cdn.example.com");
+	vi.stubEnv("R2_BUCKET_NAME", "test");
+	vi.stubEnv("R2_ACCESS_KEY", "test");
+	vi.stubEnv("R2_SECRET_KEY", "test");
+	vi.stubEnv("R2_ENDPOINT", "https://test.r2.cloudflarestorage.com");
+	vi.stubEnv("R2_URL", "https://cdn.example.com");
 	vi.stubEnv("SES_FROM_EMAIL", "test@example.com");
 	vi.stubEnv("DODOPAYMENTS_API_KEY", "test");
 	vi.stubEnv("DODOPAYMENTS_WEBHOOK_SECRET", "test");
@@ -36,7 +39,7 @@ describe("resolveUserCountry", () => {
 
 	it("falls back to platform country headers", async () => {
 		const { resolveUserCountry } = await import("./userCountryHeader");
-		const headers = new Headers({ "cloudfront-viewer-country": "gb" });
+		const headers = new Headers({ "cf-ipcountry": "gb" });
 
 		expect(resolveUserCountry(headers)).toBe("GB");
 	});

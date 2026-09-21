@@ -1,3 +1,6 @@
+allowBuilds:
+  '@sentry/cli': false
+  esbuild: false
 onlyBuiltDependencies:
   - '@sentry/cli'
   - esbuild

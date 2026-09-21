@@ -88,3 +88,21 @@ lms-tanstack/
 5. Open a Pull Request
 
 Made with ❤️ by [Aditya](https://adityakhare.com)
+
+### Better Auth schema updates
+
+Run `pnpm auth:generate` after adding or changing Better Auth plugins. It runs the
+version-matched Better Auth CLI using `src/lib/auth.ts` and writes
+`src/drizzle/auth.generated.ts`. This file is a generated reference, not the active
+Drizzle schema: merge new fields/tables into `src/drizzle/schema/user.ts` and the
+schema barrel as needed, preserving existing column names, the role enum, and app
+relations. The generator defaults to snake_case, while existing auth columns use
+camelCase; do not replace the active schema wholesale.
+
+For local development, apply reviewed schema changes with `pnpm db:push`. For
+deployments, generate and review migrations with `pnpm db:generate` before applying
+them with `pnpm db:migrate`. Generation alone does not update the database.
+
+Email signup accepts a username (3–30 letters, numbers, underscores, or periods).
+Login accepts email or username with a password. Usernames remain nullable in the
+database so existing and Google-created users are unaffected.

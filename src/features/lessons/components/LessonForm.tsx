@@ -25,7 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { type LessonStatus, lessonStatuses } from "@/drizzle/schema";
 import { actionToast } from "@/hooks/use-toast";
 import { createLesson, updateLesson } from "../actions/lessons";
-import { getVideoUploadUrl } from "../actions/s3";
+import { getVideoUploadUrl } from "../actions/r2";
 import { lessonSchema } from "../schemas/lessons";
 import { VideoPlayer } from "./YouTubeVideoPlayer";
 

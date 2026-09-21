@@ -18,7 +18,7 @@ import { ProductTable } from "@/drizzle/schema";
 import { db } from "@/drizzle/db";
 
 const createProductFn = createServerFn({ method: "POST" })
-  .inputValidator(productSchema)
+  .validator(productSchema)
   .handler(async ({ data }) => {
     try {
       if (!canCreateProducts(await getCurrentUser())) {
@@ -66,7 +66,7 @@ const createProductFn = createServerFn({ method: "POST" })
   });
 
 const updateProductFn = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ id: z.string(), values: productSchema }))
+  .validator(z.object({ id: z.string(), values: productSchema }))
   .handler(async ({ data }) => {
     try {
       if (!canUpdateProducts(await getCurrentUser())) {
@@ -101,7 +101,7 @@ const updateProductFn = createServerFn({ method: "POST" })
   });
 
 const deleteProductFn = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ id: z.string() }))
+  .validator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
     try {
       if (!canDeleteProducts(await getCurrentUser())) {

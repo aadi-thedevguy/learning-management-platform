@@ -19,6 +19,7 @@ import { Route as ConsumerIndexRouteImport } from './routes/_consumer/index'
 import { Route as ConsumerAuthedRouteImport } from './routes/_consumer/_authed'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminSalesRouteImport } from './routes/admin/sales'
+import { Route as ConsumerAuthedProfileRouteImport } from './routes/_consumer/_authed/profile'
 import { Route as ConsumerProductsProductIdRouteImport } from './routes/_consumer/products/$productId'
 import { Route as ConsumerPurchaseAfterRouteImport } from './routes/_consumer/purchase.after'
 import { Route as AdminCoursesIndexRouteImport } from './routes/admin/courses/index'
@@ -84,6 +85,11 @@ const AdminSalesRoute = AdminSalesRouteImport.update({
   id: '/sales',
   path: '/sales',
   getParentRoute: () => AdminRoute,
+} as any)
+const ConsumerAuthedProfileRoute = ConsumerAuthedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => ConsumerAuthedRoute,
 } as any)
 const ConsumerProductsProductIdRoute =
   ConsumerProductsProductIdRouteImport.update({
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/admin/sales': typeof AdminSalesRoute
   '/admin/': typeof AdminIndexRoute
+  '/profile': typeof ConsumerAuthedProfileRoute
   '/products/$productId': typeof ConsumerProductsProductIdRouteWithChildren
   '/purchase/after': typeof ConsumerPurchaseAfterRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
@@ -216,6 +223,7 @@ export interface FileRoutesByTo {
   '/': typeof ConsumerIndexRoute
   '/admin/sales': typeof AdminSalesRoute
   '/admin': typeof AdminIndexRoute
+  '/profile': typeof ConsumerAuthedProfileRoute
   '/products/$productId': typeof ConsumerProductsProductIdRouteWithChildren
   '/purchase/after': typeof ConsumerPurchaseAfterRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
@@ -245,6 +253,7 @@ export interface FileRoutesById {
   '/admin/sales': typeof AdminSalesRoute
   '/_consumer/': typeof ConsumerIndexRoute
   '/admin/': typeof AdminIndexRoute
+  '/_consumer/_authed/profile': typeof ConsumerAuthedProfileRoute
   '/_consumer/products/$productId': typeof ConsumerProductsProductIdRouteWithChildren
   '/_consumer/purchase/after': typeof ConsumerPurchaseAfterRoute
   '/admin/courses/new': typeof AdminCoursesNewRoute
@@ -274,6 +283,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/admin/sales'
     | '/admin/'
+    | '/profile'
     | '/products/$productId'
     | '/purchase/after'
     | '/admin/courses/new'
@@ -300,6 +310,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin/sales'
     | '/admin'
+    | '/profile'
     | '/products/$productId'
     | '/purchase/after'
     | '/admin/courses/new'
@@ -328,6 +339,7 @@ export interface FileRouteTypes {
     | '/admin/sales'
     | '/_consumer/'
     | '/admin/'
+    | '/_consumer/_authed/profile'
     | '/_consumer/products/$productId'
     | '/_consumer/purchase/after'
     | '/admin/courses/new'
@@ -430,6 +442,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/sales'
       preLoaderRoute: typeof AdminSalesRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/_consumer/_authed/profile': {
+      id: '/_consumer/_authed/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ConsumerAuthedProfileRouteImport
+      parentRoute: typeof ConsumerAuthedRoute
     }
     '/_consumer/products/$productId': {
       id: '/_consumer/products/$productId'
@@ -569,6 +588,7 @@ const ConsumerAuthedCoursesCourseIdSidebarRouteWithChildren =
   )
 
 interface ConsumerAuthedRouteChildren {
+  ConsumerAuthedProfileRoute: typeof ConsumerAuthedProfileRoute
   ConsumerAuthedPurchasesPurchaseIdRoute: typeof ConsumerAuthedPurchasesPurchaseIdRoute
   ConsumerAuthedCoursesIndexRoute: typeof ConsumerAuthedCoursesIndexRoute
   ConsumerAuthedPurchasesIndexRoute: typeof ConsumerAuthedPurchasesIndexRoute
@@ -576,6 +596,7 @@ interface ConsumerAuthedRouteChildren {
 }
 
 const ConsumerAuthedRouteChildren: ConsumerAuthedRouteChildren = {
+  ConsumerAuthedProfileRoute: ConsumerAuthedProfileRoute,
   ConsumerAuthedPurchasesPurchaseIdRoute:
     ConsumerAuthedPurchasesPurchaseIdRoute,
   ConsumerAuthedCoursesIndexRoute: ConsumerAuthedCoursesIndexRoute,

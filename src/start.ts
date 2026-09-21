@@ -1,6 +1,6 @@
 import { createStart } from "@tanstack/react-start";
-import { countryMiddleware } from "./middleware";
+import { countryMiddleware, csrfMiddleware } from "./middleware";
 
 export const startInstance = createStart(() => ({
-	requestMiddleware: [countryMiddleware],
+  requestMiddleware: [countryMiddleware, csrfMiddleware],
 }));

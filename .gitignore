@@ -9,13 +9,3 @@ yarn.lock
 .nitro
 /build/
 dist/
-drizzle
-/api/
-/server/build
-/public/build# Sentry Config File
-.env.sentry-build-plugin
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-.tanstack

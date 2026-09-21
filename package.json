@@ -14,11 +14,11 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:pull": "drizzle-kit pull",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "auth:generate": "dotenv -e .env -- pnpm dlx auth@1.6.23 generate --config ./src/lib/auth.ts --output ./src/drizzle/auth.generated.ts --yes"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1087.0",
-    "@aws-sdk/client-ses": "^3.1087.0",
     "@aws-sdk/s3-request-presigner": "^3.1087.0",
     "@better-auth/drizzle-adapter": "^1.6.23",
     "@dnd-kit/core": "^6.3.1",
@@ -60,6 +60,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.74.0",
+    "resend": "^6.28.1",
     "standardwebhooks": "^1.0.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss": "^4.1.18",

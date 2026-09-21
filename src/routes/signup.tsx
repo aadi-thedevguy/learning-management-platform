@@ -1,3 +1,5 @@
+import { GoogleSignIn } from "@/components/GoogleSignIn";
+import { authSearchSchema } from "@/lib/auth-search";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,22 +26,26 @@ import {
 import { toast } from "@/hooks/use-toast";
 
 const signupSchema = z.object({
+  username: z.string().trim().min(3).max(30).regex(/^[a-zA-Z0-9_.]+$/, "Use letters, numbers, underscores, or periods"),
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
 export const Route = createFileRoute("/signup")({
+  validateSearch: authSearchSchema,
   component: SignupComponent,
 });
 
 function SignupComponent() {
   const navigate = useNavigate();
+  const { redirect, error } = Route.useSearch();
 
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
       name: "",
+      username: "",
       email: "",
       password: "",
     },
@@ -51,7 +57,8 @@ function SignupComponent() {
         email: values.email,
         password: values.password,
         name: values.name,
-        callbackURL: "/courses",
+        username: values.username,
+        callbackURL: redirect || "/courses",
       },
       {
         onSuccess: () => {
@@ -60,7 +67,7 @@ function SignupComponent() {
             description:
               "Account created! Please check your email for verification.",
           });
-          navigate({ to: "/login" });
+          navigate({ to: "/login", search: { redirect } });
         },
         onError: (ctx) => {
           toast({
@@ -85,6 +92,7 @@ function SignupComponent() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <GoogleSignIn callbackURL={redirect || "/courses"} errorPath="/signup" error={error} disabled={form.formState.isSubmitting} />
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -96,6 +104,17 @@ function SignupComponent() {
                     <FormControl>
                       <Input {...field} placeholder="John Doe" />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl><Input {...field} autoComplete="username" placeholder="john_doe" /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -145,7 +164,7 @@ function SignupComponent() {
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link to="/login" className="text-primary hover:underline">
+            <Link to="/login" search={{ redirect }} className="text-primary hover:underline">
               Login
             </Link>
           </p>

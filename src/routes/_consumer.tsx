@@ -1,5 +1,6 @@
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
-import { HomeIcon, LogOut } from "lucide-react";
+import { UserMenu } from "@/components/UserMenu";
+import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
+import { HomeIcon } from "lucide-react";
 import { HasPermission } from "@/components/HasPermission";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -51,7 +52,7 @@ function ConsumerLayout() {
 							>
 								Purchase History
 							</Link>
-							<SignOutButton />
+							<UserMenu />
 						</>
 					) : (
 						<Button className="self-center" asChild>
@@ -66,23 +67,3 @@ function ConsumerLayout() {
 		</>
 	);
 }
-
-function SignOutButton() {
-	const navigate = useNavigate();
-
-	return (
-		<Button
-			variant="ghost"
-			size="icon"
-			className="self-center"
-			onClick={async () => {
-				await authClient.signOut();
-				navigate({ to: "/" });
-			}}
-		>
-			<LogOut className="h-4 w-4" />
-		</Button>
-	);
-}
-
-

@@ -26,7 +26,7 @@ import type { DodoPayments } from "dodopayments";
 import type { Discount } from "dodopayments/resources/discounts.mjs";
 
 export const getPurchase = createServerFn()
-  .inputValidator(z.object({ purchaseId: z.string() }))
+  .validator(z.object({ purchaseId: z.string() }))
   .handler(async ({ data }) => {
     const { userId, user } = await getCurrentUser({ allData: true });
     if (userId == null || user == null) throw redirect({ href: "/login" });

@@ -10,7 +10,7 @@ import { updatePurchase } from "../db/purchases";
 import { canRefundPurchases } from "../permissions/products";
 
 const refundPurchaseFn = createServerFn({ method: "POST" })
-  .inputValidator(z.object({ id: z.string() }))
+  .validator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
     if (!canRefundPurchases(await getCurrentUser())) {
       return {

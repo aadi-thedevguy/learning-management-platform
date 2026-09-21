@@ -21,6 +21,9 @@ export const UserTable = pgTable("user", {
 	role: userRoleEnum().notNull().default("user"),
 	username: text("username").unique(),
 	displayUsername: text("displayUsername"),
+	banned: boolean("banned").default(false),
+	banReason: text("banReason"),
+	banExpires: timestamp("banExpires"),
 	deletedAt: timestamp({ withTimezone: true }),
 	createdAt: timestamp("createdAt").notNull().defaultNow(),
 	updatedAt: timestamp("updatedAt").notNull().defaultNow(),
@@ -34,6 +37,7 @@ export const SessionTable = pgTable("session", {
 	updatedAt: timestamp("updatedAt").notNull().defaultNow(),
 	ipAddress: text("ipAddress"),
 	userAgent: text("userAgent"),
+	impersonatedBy: text("impersonatedBy"),
 	userId: text("userId")
 		.notNull()
 		.references(() => UserTable.id, { onDelete: "cascade" }),

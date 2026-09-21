@@ -1,20 +1,24 @@
-import { createMiddleware } from "@tanstack/react-start";
+import { createMiddleware, createCsrfMiddleware } from "@tanstack/react-start";
 import {
-	resolveUserCountry,
-	setUserCountryHeader,
+  resolveUserCountry,
+  setUserCountryHeader,
 } from "./lib/userCountryHeader";
 
 export const countryMiddleware = createMiddleware().server(
-	async ({ next, request }) => {
-		try {
-			setUserCountryHeader(
-				request.headers,
-				resolveUserCountry(request.headers),
-			);
-		} catch (error) {
-			console.warn("Could not set country header on request", error);
-		}
+  async ({ next, request }) => {
+    try {
+      setUserCountryHeader(
+        request.headers,
+        resolveUserCountry(request.headers),
+      );
+    } catch (error) {
+      console.warn("Could not set country header on request", error);
+    }
 
-		return next();
-	},
+    return next();
+  },
 );
+
+export const csrfMiddleware = createCsrfMiddleware({
+  filter: (ctx) => ctx.handlerType === "serverFn",
+});

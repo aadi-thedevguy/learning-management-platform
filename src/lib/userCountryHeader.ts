@@ -7,7 +7,6 @@ const PLATFORM_COUNTRY_HEADERS = [
 	COUNTRY_HEADER_KEY,
 	"x-vercel-ip-country",
 	"cf-ipcountry",
-	"cloudfront-viewer-country",
 	"x-appengine-country",
 	"x-country-code",
 	"x-client-country",

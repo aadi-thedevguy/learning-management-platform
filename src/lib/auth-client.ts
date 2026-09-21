@@ -1,24 +1,25 @@
 import { createAuthClient } from "better-auth/react";
 import {
-	inferAdditionalFields,
-	adminClient,
-	usernameClient,
-	lastLoginMethodClient,
+  inferAdditionalFields,
+  adminClient,
+  usernameClient,
+  lastLoginMethodClient,
 } from "better-auth/client/plugins";
-import { auth, admin, user, ac } from "./auth";
+import type { auth } from "./auth";
+import { admin, user, ac } from "./auth-permissions";
 
 export const authClient = createAuthClient({
-	baseURL: "/api/auth",
-	plugins: [
-		inferAdditionalFields<typeof auth>(),
-		usernameClient(),
-		lastLoginMethodClient(),
-		adminClient({
-			ac,
-			roles: {
-				admin,
-				user,
-			},
-		}),
-	],
+  baseURL: import.meta.env.VITE_SERVER_URL,
+  plugins: [
+    inferAdditionalFields<typeof auth>(),
+    usernameClient(),
+    lastLoginMethodClient(),
+    adminClient({
+      ac,
+      roles: {
+        admin,
+        user,
+      },
+    }),
+  ],
 });

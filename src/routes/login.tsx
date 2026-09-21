@@ -1,3 +1,5 @@
+import { GoogleSignIn } from "@/components/GoogleSignIn";
+import { authSearchSchema } from "@/lib/auth-search";
 import {
   createFileRoute,
   Link,
@@ -28,55 +30,41 @@ import {
 import { toast } from "@/hooks/use-toast";
 
 const loginSchema = z.object({
-  email: z.string().email(),
+  identifier: z.string().trim().min(1, "Enter your email or username"),
   password: z.string().min(8),
 });
 
-const searchSchema = z.object({
-  redirect: z.string().optional(),
-});
-
 export const Route = createFileRoute("/login")({
-  validateSearch: searchSchema,
+  validateSearch: authSearchSchema,
   component: LoginComponent,
 });
 
 function LoginComponent() {
   const navigate = useNavigate();
-  const { redirect } = Route.useSearch();
+  const { redirect, error } = Route.useSearch();
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "",
+      identifier: "",
       password: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
-    await authClient.signIn.email(
-      {
-        email: values.email,
-        password: values.password,
-        callbackURL: redirect || "/courses",
-      },
-      {
-        onError: (ctx) => {
-          toast({
-            title: "Error",
-            description: ctx.error.message || "Login failed",
-            variant: "destructive",
-          });
-        },
-        onSuccess: () => {
-          toast({
-            title: "Success",
-            description: "Welcome back!",
-          });
-          navigate({ href: redirect || "/courses" });
-        },
-      },
-    );
+    try {
+      const identifier = values.identifier;
+      const result = identifier.includes("@")
+        ? await authClient.signIn.email({ email: identifier, password: values.password, callbackURL: redirect || "/courses" })
+        : await authClient.signIn.username({ username: identifier, password: values.password });
+      if (result.error) {
+        toast({ title: "Error", description: result.error.message || "Login failed", variant: "destructive" });
+        return;
+      }
+      await navigate({ href: redirect || "/courses" });
+    } catch {
+      toast({ title: "Error", description: "Unable to log in. Please try again.", variant: "destructive" });
+    }
   }
 
   return (
@@ -85,20 +73,21 @@ function LoginComponent() {
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your email and password to access your account.
+            Enter your email or username and password to access your account.
           </CardDescription>
         </CardHeader>
         <CardContent>
+          <GoogleSignIn callbackURL={redirect || "/courses"} errorPath="/login" error={error} disabled={form.formState.isSubmitting} />
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
-                name="email"
+                name="identifier"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Email or username</FormLabel>
                     <FormControl>
-                      <Input {...field} type="email" />
+                      <Input {...field} type="text" autoComplete="username" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -138,7 +127,7 @@ function LoginComponent() {
         <CardFooter className="justify-center">
           <p className="text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-primary hover:underline">
+            <Link to="/signup" search={{ redirect }} className="text-primary hover:underline">
               Sign up
             </Link>
           </p>
